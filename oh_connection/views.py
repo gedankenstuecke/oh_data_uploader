@@ -193,10 +193,10 @@ def complete(request):
                 metadata)
         else:
             logger.debug('INVALID FORM')
-        return redirect('dashboard')
+        return redirect('index')
 
 
 def upload_old(request):
     if request.user.is_authenticated:
-        return render(request, 'users/upload_old.html')
-    return redirect('dashboard')
+        return render(request, 'oh_connection/upload_old.html')
+    return redirect('index')
