@@ -32,6 +32,18 @@ DEBUG = False if os.getenv('DEBUG', '').lower() == 'false' else True
 ALLOWED_HOSTS = ['*']
 
 
+# OH settings
+
+OH_CLIENT_ID = os.getenv('OH_CLIENT_ID')
+OH_CLIENT_SECRET = os.getenv('OH_CLIENT_SECRET')
+OH_ACTIVITY_PAGE = os.getenv('OH_ACTIVITY_PAGE')
+OH_REDIRECT_URI = os.getenv('OH_REDIRECT_URI', '')
+OH_BASE_URL = 'https://www.openhumans.org'
+OH_ACTIVITY_PAGE = os.getenv('OH_ACTIVITY_PAGE')
+# OH_BASE_URL = 'https://staging.openhumans.org'
+APP_BASE_URL = os.getenv('APP_BASE_URL', 'http://127.0.0.1:5000/')
+
+
 # Application definition
 
 INSTALLED_APPS = [

@@ -4,6 +4,7 @@ from .models import OpenHumansMember
 
 # Register your models here.
 
+
 @admin.register(OpenHumansMember)
 class OpenHumansMemberAdmin(admin.ModelAdmin):
     pass
