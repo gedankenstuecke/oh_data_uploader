@@ -1,0 +1,11 @@
+venv
+*.pyc
+staticfiles
+.env
+.env.staging
+.ipynb_checkpoints
+twitter_archive/
+db.sqlite3
+dump.rdb
+.DS_Store
+
