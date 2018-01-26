@@ -70,20 +70,15 @@ function startUpload() {
   {% endif %}
   {% csrf_token %}
   <p>
-    <b>Upload Twitter archive file</b><br>
-    (complete zip-file as downloaded)<br>
+    <b>Upload your data </b><br>
     <input id='file' type="file" name="file" class="btn">
   </p>
   <input type="button" class="btn btn-primary" value="Upload Twitter archive" onClick="startUpload()"></br></br>
-  <p>
-    <small>The analysis after the upload can take a while. We will message you through
-    the <em>Open Humans</em> system once your graphs are ready.</small>
-  </p>
 </form>
 <p>
   <small>
     The Javascript uploader has failed for some users in the past. You could try another browser
-    or <a href="{% url 'upload_old' %}">use the simpler upload form</a>.
+    or <a href="{% url 'upload_old' %}">use the simpler upload form</a> if you prefer that.
   </small>
 </p>
 </div>

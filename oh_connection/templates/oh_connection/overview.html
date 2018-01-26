@@ -1,0 +1,29 @@
+{% extends 'oh_connection/application.html' %}
+
+{% block content %}
+
+      <h1>Manage your data.</h1>
+      <p class="lead">
+        Thank you! We have your authorization from Open Humans.
+      </p>
+      <div class="row">
+        <div class="col-md-6">
+          <p>
+            Welcome to this project. Here you can manage your files and upload
+            new ones!
+          </p>
+        </div>
+        <div class="col-md-6">
+          <div class="panel panel-default">
+            <div class="panel-body">
+              {% include 'oh_connection/partials/upload_form.html' %}
+            </div>
+          </div>
+          <p>
+            You can also visit <a href="{{ oh_proj_page }}">this project's page on Open Humans </a>
+            to see any data you've previously uploaded.
+          </p>
+        </div>
+      </div>
+
+{% endblock %}

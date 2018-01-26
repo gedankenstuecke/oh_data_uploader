@@ -146,7 +146,15 @@ def index(request):
     context = {'client_id': settings.OH_CLIENT_ID,
                'oh_proj_page': settings.OH_ACTIVITY_PAGE,
                'redirect_uri': settings.OH_REDIRECT_URI}
+    if request.user.is_authenticated:
+        return redirect('overview')
     return render(request, 'oh_connection/index.html', context=context)
+
+
+def overview(request):
+    if request.user.is_authenticated:
+        return render(request, 'oh_connection/overview.html')
+    return redirect('index')
 
 
 def complete(request):
