@@ -3,11 +3,10 @@
 {% block content %}
 
       <div class="jumbotron">
-        <h1>Welcome to the <font color="#1DA1F2">Tw</font>Arχiv.</h1>
+        <img alt="Brand" src="{{yaml_config.logo}}" height="150px" align="left">
+        <h1>Welcome to {{yaml_config.project_title}}</h1>
         <p>
-          Upload your <i>Twitter</i> archive to <i><a href="{{ oh_proj_page }}">Open Humans</a></i> and
-          we will analyze it so that you can learn about
-          your tweet behaviour.
+          {{yaml_config.project_description}}
         </p>
       </div>
 
@@ -15,22 +14,14 @@
         <div class="col-md-6">
           <h2>How it works</h2>
           <ol>
-            <li><b>Request your Twitter archive from the <a href="https://twitter.com/settings/account">Twitter website</a></b><br>
-              Visit your
-              <a href="https://twitter.com/settings/account">
-                account settings
-              </a> and scroll all the way down. Click on <i>Request your archive</i>.
-              Once the archive is created Twitter will email you with the link to
-              download it.
-            </li>
             <li><b>Log in or create an Open Humans account</b><br>
-              You can upload your Twitter archive into this account once Twitter
-              has created it.
+              You can upload your data for <i>{{yaml_config.project_title}}</i>
+              once you have done this.
             </li>
-            <li><b>Authorize the <font color="#1DA1F2">Tw</font>Arχiv in Open Humans</b><br>
+            <li><b>Authorize {{yaml_config.project_title}} on <i>Open Humans</i></b><br>
               This authorizes us to deposit your archive into your Open Humans account.</li>
-            <li><b>Upload your archive.</b><br>
-              You will be redirected back to the <font color="#1DA1F2">Tw</font>Arχiv and can then
+            <li><b>Upload your data.</b><br>
+              You will be redirected back to {{yaml_config.project_title}} and can then
               upload your archive data.
               You'll be able to
               <a href="{{ oh_proj_page }}">access &amp; manage your data on
@@ -46,21 +37,7 @@
           <h2>FAQ</h2>
           <div class="panel panel-default">
             <div class="panel-heading">
-              <h3 class="panel-title">Can I see an example of what I'll get?</h3>
-            </div>
-            <div class="panel-body">
-              <p>
-                You bet you can!
-                to see how the archives of other users have been visualized.
-                You will get a general analysis of your tweet behavior,
-                a breakdown of your interactions over time as well as maps that show from where
-                you tweet.
-              </p>
-            </div>
-          </div>
-          <div class="panel panel-default">
-            <div class="panel-heading">
-              <h3 class="panel-title">Will my archive data be public?</h3>
+              <h3 class="panel-title">Will my data be public?</h3>
             </div>
             <div class="panel-body">
               <p>
@@ -68,25 +45,6 @@
                 you want to make this data public. If that is the case then you can head over to
                 <a href="{{ oh_proj_page }}">Open Humans</a>.
                 and make the full archive data publicly available.
-              </p>
-            </div>
-          </div>
-          <div class="panel panel-default">
-            <div class="panel-heading">
-              <h3 class="panel-title">Will my visualizations be publicly available?</h3>
-            </div>
-            <div class="panel-body">
-              <p>
-                The same short answer: No. The longer answer: No, unless you decide that
-                you want to make this data public. If you do so, the
-                graphs will
-                right here on the website.
-                You will also get URLs that allow you to share the visualizations with others.
-              </p>
-              <p>
-                You can also choose to make the
-                graphs private again at any point later on. By the way: You can make your graphs publicly
-                available without publicly sharing your full archive.
               </p>
             </div>
           </div>

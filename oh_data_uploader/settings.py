@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 
 import os
 import dj_database_url
+import yaml
 from env_tools import apply_env
 
 apply_env()
@@ -32,17 +33,21 @@ DEBUG = False if os.getenv('DEBUG', '').lower() == 'false' else True
 ALLOWED_HOSTS = ['*']
 
 
-# OH settings
+# Read OH settings from .env/environment variables
 
 OH_CLIENT_ID = os.getenv('OH_CLIENT_ID')
 OH_CLIENT_SECRET = os.getenv('OH_CLIENT_SECRET')
 OH_ACTIVITY_PAGE = os.getenv('OH_ACTIVITY_PAGE')
-OH_REDIRECT_URI = os.getenv('OH_REDIRECT_URI', '')
+if OH_ACTIVITY_PAGE[-1] == "/":
+    OH_ACTIVITY_PAGE = OH_ACTIVITY_PAGE[:-1]
 OH_BASE_URL = 'https://www.openhumans.org'
 OH_ACTIVITY_PAGE = os.getenv('OH_ACTIVITY_PAGE')
 # OH_BASE_URL = 'https://staging.openhumans.org'
 APP_BASE_URL = os.getenv('APP_BASE_URL', 'http://127.0.0.1:5000/')
 
+# Read config from config.yaml
+yaml_content = open('config.yaml').readlines()
+YAML_CONFIG = yaml.load(''.join(yaml_content))
 
 # Application definition
 
@@ -80,6 +85,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'oh_connection.context_processors.read_config'
             ],
         },
     },

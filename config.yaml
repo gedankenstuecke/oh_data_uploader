@@ -1,0 +1,4 @@
+project_title: My Open Humans Project
+project_description: This template demonstrates how you can run your own Open Humans data upload project.
+more_info_link: http://www.github.com/gedankenstuecke/oh_data_uploader
+logo: ' static/example_logo.png'

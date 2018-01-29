@@ -144,8 +144,8 @@ def index(request):
     Starting page for app.
     """
     context = {'client_id': settings.OH_CLIENT_ID,
-               'oh_proj_page': settings.OH_ACTIVITY_PAGE,
-               'redirect_uri': settings.OH_REDIRECT_URI}
+               'redirect_uri': '{}/complete'.format(APP_BASE_URL),
+               'config': settings.YAML_CONFIG}
     if request.user.is_authenticated:
         return redirect('overview')
     return render(request, 'oh_connection/index.html', context=context)
@@ -153,7 +153,10 @@ def index(request):
 
 def overview(request):
     if request.user.is_authenticated:
-        return render(request, 'oh_connection/overview.html')
+        oh_member = request.user.openhumansmember
+        context = {'oh_id': oh_member.oh_id,
+                   'oh_member': oh_member}
+        return render(request, 'oh_connection/overview.html', context=context)
     return redirect('index')
 
 
@@ -185,7 +188,6 @@ def complete(request):
         form = UploadFileForm()
         context = {'oh_id': oh_member.oh_id,
                    'oh_member': oh_member,
-                   'oh_proj_page': settings.OH_ACTIVITY_PAGE,
                    'form': form}
         return render(request, 'oh_connection/complete.html',
                       context=context)
