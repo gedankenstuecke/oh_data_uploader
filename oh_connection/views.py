@@ -195,8 +195,8 @@ def complete(request):
     elif request.method == 'POST':
         form = UploadFileForm(request.POST, request.FILES)
         if form.is_valid():
-            metadata = {'tags': ['twitter', 'twitter-archive'],
-                        'description': 'Twitter achive file.'}
+            metadata = {'tags': settings.YAML_CONFIG['file_tags'],
+                        'description': settings.YAML_CONFIG['file_description']}
             upload_file_to_oh(
                 request.user.openhumansmember,
                 request.FILES['file'],

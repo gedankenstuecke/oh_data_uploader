@@ -34,20 +34,19 @@ ALLOWED_HOSTS = ['*']
 
 
 # Read OH settings from .env/environment variables
-
+OH_BASE_URL = 'https://www.openhumans.org'
 OH_CLIENT_ID = os.getenv('OH_CLIENT_ID')
 OH_CLIENT_SECRET = os.getenv('OH_CLIENT_SECRET')
-OH_ACTIVITY_PAGE = os.getenv('OH_ACTIVITY_PAGE')
-if OH_ACTIVITY_PAGE[-1] == "/":
-    OH_ACTIVITY_PAGE = OH_ACTIVITY_PAGE[:-1]
-OH_BASE_URL = 'https://www.openhumans.org'
-OH_ACTIVITY_PAGE = os.getenv('OH_ACTIVITY_PAGE')
-# OH_BASE_URL = 'https://staging.openhumans.org'
-APP_BASE_URL = os.getenv('APP_BASE_URL', 'http://127.0.0.1:5000/')
 
 # Read config from config.yaml
 yaml_content = open('config.yaml').readlines()
 YAML_CONFIG = yaml.load(''.join(yaml_content))
+YAML_CONFIG['file_tags_string'] = str(YAML_CONFIG['file_tags'])
+
+APP_BASE_URL = YAML_CONFIG['app_base_url']
+if APP_BASE_URL[-1] == "/":
+    APP_BASE_URL = APP_BASE_URL[:-1]
+
 
 # Application definition
 
