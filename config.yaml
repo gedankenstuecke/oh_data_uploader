@@ -7,8 +7,9 @@ project_description: This template demonstrates how you can run your own Open Hu
 # REQUIRED: Where can we find your project on Open Humans
 oh_activity_page: https://www.openhumans.org/activity/your-project-url/
 
-# REQUIRED: which URL will lead to your Open Humans uploader
-app_base_url: http://127.0.0.1:5000
+# Optional: which URL will lead to your Open Humans uploader
+# Defaults to http://127.0.0.1:500 if not set.
+# app_base_url: http://127.0.0.1:5000
 
 # REQUIRED: Tell Open Humans what kind of data is being uploaded
 file_description: This is an example file that doesnt have any meaning.

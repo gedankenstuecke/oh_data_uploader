@@ -30,7 +30,13 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'whopsthereshouldbeone')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False if os.getenv('DEBUG', '').lower() == 'false' else True
 
-ALLOWED_HOSTS = ['*']
+# Establish whether this is running on Heroku
+ON_HEROKU = os.getenv('ON_HEROKU', '').lower() == 'true'
+
+if ON_HEROKU:
+    ALLOWED_HOSTS = ['*']
+else:
+    ALLOWED_HOSTS = []
 
 
 # Read OH settings from .env/environment variables
@@ -43,7 +49,8 @@ yaml_content = open('config.yaml').readlines()
 YAML_CONFIG = yaml.load(''.join(yaml_content))
 YAML_CONFIG['file_tags_string'] = str(YAML_CONFIG['file_tags'])
 
-APP_BASE_URL = YAML_CONFIG['app_base_url']
+# Set up base URL.
+APP_BASE_URL = YAML_CONFIG.get('app_base_url', 'http://127.0.0.1:5000')
 if APP_BASE_URL[-1] == "/":
     APP_BASE_URL = APP_BASE_URL[:-1]
 
@@ -96,9 +103,16 @@ WSGI_APPLICATION = 'oh_data_uploader.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 
-db_from_env = dj_database_url.config(conn_max_age=500)
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    }
+}
 
-DATABASES = {'default': db_from_env}
+if ON_HEROKU:
+    db_from_env = dj_database_url.config(conn_max_age=500)
+    DATABASES = {'default': db_from_env}
 
 
 # Password validation

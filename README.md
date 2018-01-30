@@ -24,17 +24,22 @@ conda create -n oh_uploader python=3.6
 pip install -r requirements.txt
 ```
 
-*Step 2: Install heroku-CLI & PostgreSQL*
+*Step 2: Install Heroku Command Line Interface (CLI)*
 
-If you are running MacOS the easiest way to do this is using [Homebrew](https://brew.sh/). If you are on a Linux machine you [should be able to do the same things using Linuxbrew](https://virtualenv.pypa.io/en/stable/). After installing Homebrew/Linuxbrew
-you can do:
+You should install the Heroku CLI to run this app. Heroku has [installation instructions for MacOS, Windows, and Linux](https://devcenter.heroku.com/articles/heroku-cli#download-and-install).
+
+If you are running MacOS the easiest way to do this is using [Homebrew](https://brew.sh/). After installing Homebrew you can do:
 
 ```
-brew install postgres
 brew install heroku/brew/heroku
 ```
 
-Once this is done you can start the setup of your *Open Humans uploader* by copying the example `.env` file (`cp .env.sample .env`) and entering at least your database URL. Once this is done you can migrate your database using `heroku local:run python manage.py migrate`. Afterwards you can start the webserver of your local heroku environment using `heroku local`.
+Once this is done you can complete minimal setup by:
+* Create an `.env` file from the example: `cp .env.sample .env`)
+* Edit `.env` to set a random string for `DJANGO_SECRET`
+* Migrate your database using `heroku local:run python manage.py migrate`
+
+Now you can run the webserver of your local heroku environment using `heroku local`.
 
 To fully set up your uploader you will have to modify some files, as described below.
 
