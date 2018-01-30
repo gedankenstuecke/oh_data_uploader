@@ -6,6 +6,7 @@ app_name = 'project-admin'
 
 urlpatterns = [
     url(r'^$', views.home, name='home'),
-    url(r'^config/?$', views.config, name='config'),
+    url(r'^config-oh-settings/?$',
+        views.config_oh_settings, name='config-oh-settings'),
     url(r'^login/?$', views.admin_login, name='login'),
 ]

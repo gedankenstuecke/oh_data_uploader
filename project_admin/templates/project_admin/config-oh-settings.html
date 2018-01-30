@@ -1,0 +1,20 @@
+{% extends 'oh_connection/application.html' %}
+
+{% block content %}
+{% load utilities %}
+
+<form action="{% url 'project-admin:config-oh-settings' %}" method="post">
+  {% csrf_token %}
+  <p>
+    Client ID: <input name="client_id" size=60 value={{config.oh_client_id}}>
+  </p>
+  <p>
+    Client secret: <input name="client_secret" size=60 value={{config.oh_client_secret}}>
+  </p>
+  <p>
+    Activity page URL: <input name="activity_page" size=60 value={{config.oh_activity_page}}>
+  </p>
+  <input type="submit" value="Save updates">
+</form>
+
+{% endblock %}

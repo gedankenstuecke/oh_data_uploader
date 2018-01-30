@@ -47,3 +47,21 @@ def admin_login(request):
                           context={'error': 'Password incorrect.'})
 
     return render(request, 'project_admin/login.html')
+
+
+def config_oh_settings(request):
+    """
+    Update Open Humans project configuration.
+    """
+    if request.user.username != 'admin':
+        return redirect('project-admin:home')
+
+    if request.method == 'POST':
+        project_config = ProjectConfiguration.objects.get(id=1)
+        project_config.oh_client_id = request.POST['client_id']
+        project_config.oh_client_secret = request.POST['client_secret']
+        project_config.oh_activity_page = request.POST['activity_page']
+        project_config.save()
+        return redirect('project-admin:home')
+
+    return render(request, 'project_admin/config-oh-settings.html')
