@@ -15,7 +15,7 @@ to *Heroku*. To install a copy of it on MacOS you will need to install some addi
  *Step 1: Install Anaconda*
 
 [Download & Install the appropriate version of *Anaconda* on your end](https://www.anaconda.com/download/#macos),
-this makes it easy to keep Python versions and modules clean.
+this makes it easy to keep Python versions and modules clean. If you are already familiar with [*virtualenv*](https://virtualenv.pypa.io/en/stable/) you can use their workflow instead of *Anaconda*.
 
 After you have installed *Anaconda*, create a fresh environment for the *Open Humans uploader* and install the needed Python packages:
 
@@ -26,7 +26,7 @@ pip install -r requirements.txt
 
 *Step 2: Install heroku-CLI & PostgreSQL*
 
-If you are running MacOS the easiest way to do this is using [Homebrew](https://brew.sh/). After installing Homebrew
+If you are running MacOS the easiest way to do this is using [Homebrew](https://brew.sh/). If you are on a Linux machine you [should be able to do the same things using Linuxbrew](https://virtualenv.pypa.io/en/stable/). After installing Homebrew/Linuxbrew
 you can do:
 
 ```
