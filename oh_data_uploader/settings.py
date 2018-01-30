@@ -12,7 +12,6 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 
 import os
 import dj_database_url
-import yaml
 from env_tools import apply_env
 
 apply_env()
@@ -30,23 +29,26 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'whopsthereshouldbeone')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False if os.getenv('DEBUG', '').lower() == 'false' else True
 
-ALLOWED_HOSTS = ['*']
+# Infer if this is running on Heroku based on this being set.
+HEROKUCONFIG_APP_NAME = os.getenv('HEROKUCONFIG_APP_NAME', '')
+ON_HEROKU = bool(HEROKUCONFIG_APP_NAME)
 
+ALLOWED_HOSTS = ['*']
 
 # Read OH settings from .env/environment variables
 OH_BASE_URL = 'https://www.openhumans.org'
 OH_CLIENT_ID = os.getenv('OH_CLIENT_ID')
 OH_CLIENT_SECRET = os.getenv('OH_CLIENT_SECRET')
 
-# Read config from config.yaml
-yaml_content = open('config.yaml').readlines()
-YAML_CONFIG = yaml.load(''.join(yaml_content))
-YAML_CONFIG['file_tags_string'] = str(YAML_CONFIG['file_tags'])
-
-APP_BASE_URL = YAML_CONFIG['app_base_url']
+# Set up base URL.
+DEFAULT_BASE_URL = ('https://{}.herokuapp.com'.format(HEROKUCONFIG_APP_NAME) if
+                    ON_HEROKU else 'http://127.0.0.1:5000')
+APP_BASE_URL = os.getenv('APP_BASE_URL', DEFAULT_BASE_URL)
 if APP_BASE_URL[-1] == "/":
     APP_BASE_URL = APP_BASE_URL[:-1]
 
+# Admin account password for configuration.
+ADMIN_PASSWORD = os.getenv('ADMIN_PASSWORD', '')
 
 # Application definition
 
@@ -57,7 +59,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'oh_connection.apps.OhConnectionConfig'
+    'oh_connection.apps.OhConnectionConfig',
+    'project_admin.apps.ProjectAdminConfig',
 ]
 
 MIDDLEWARE = [
@@ -96,9 +99,16 @@ WSGI_APPLICATION = 'oh_data_uploader.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 
-db_from_env = dj_database_url.config(conn_max_age=500)
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    }
+}
 
-DATABASES = {'default': db_from_env}
+if ON_HEROKU:
+    db_from_env = dj_database_url.config(conn_max_age=500)
+    DATABASES = {'default': db_from_env}
 
 
 # Password validation

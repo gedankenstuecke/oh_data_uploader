@@ -1,0 +1,47 @@
+{% extends 'oh_connection/application.html' %}
+
+{% block content %}
+{% load utilities %}
+
+<form action="{% url 'project-admin:config-homepage-text' %}" method="post">
+  {% csrf_token %}
+
+  <label>
+    About text
+  </label>
+  <div class="form-group">
+    <textarea name="about" style="font-family:monospace;" class="form-control" rows=30 cols=110>{{config.about}}</textarea>
+  </div>
+
+  <label>
+    FAQ
+  </label>
+  <div class="form-group">
+    <textarea class="form-control" name="faq" style="font-family:monospace;" rows=30 cols=110>{{config.faq}}</textarea>
+  </div>
+
+  <label>
+    Homepage text
+  </label>
+  <div class="form-group">
+    <textarea class="form-control" name="homepage_text" style="font-family:monospace;" rows=30 cols=110>{{config.homepage_text}}</textarea>
+  </div>
+
+  <label>
+    Overview
+  </label>
+  <div class="form-group">
+    <textarea class="form-control" name="overview" style="font-family:monospace;" rows=30 cols=110>{{config.overview}}</textarea>
+  </div>
+
+  <label>
+    Upload description
+  </label>
+  <div class="form-group">
+    <textarea class="form-control" name="upload_description" style="font-family:monospace;" rows=30 cols=110>{{config.upload_description}}</textarea>
+  </div>
+
+  <input class="btn btn-default"  type="submit" value="Save update">
+</form>
+
+{% endblock %}

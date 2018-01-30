@@ -2,6 +2,8 @@
 > *it's like Jekyll for Open Humans*
 or something along the lines.
 
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
+
 Ultimately this should be an easy to deploy Django project that functions as a
 file uploader for individual *Open Humans* projects. It should be easy deploy to
 *heroku* and the configuration/styling of the project website should be done more
@@ -24,17 +26,23 @@ conda create -n oh_uploader python=3.6
 pip install -r requirements.txt
 ```
 
-*Step 2: Install heroku-CLI & PostgreSQL*
+*Step 2: Install Heroku Command Line Interface (CLI)*
 
-If you are running MacOS the easiest way to do this is using [Homebrew](https://brew.sh/). If you are on a Linux machine you [should be able to do the same things using Linuxbrew](https://virtualenv.pypa.io/en/stable/). After installing Homebrew/Linuxbrew
-you can do:
+You should install the Heroku CLI to run this app. Heroku has [installation instructions for MacOS, Windows, and Linux](https://devcenter.heroku.com/articles/heroku-cli#download-and-install).
+
+If you are running MacOS the easiest way to do this is using [Homebrew](https://brew.sh/). After installing Homebrew you can do:
 
 ```
-brew install postgres
 brew install heroku/brew/heroku
 ```
 
-Once this is done you can start the setup of your *Open Humans uploader* by copying the example `.env` file (`cp .env.sample .env`) and entering at least your database URL. Once this is done you can migrate your database using `heroku local:run python manage.py migrate`. Afterwards you can start the webserver of your local heroku environment using `heroku local`.
+Once this is done you can complete minimal setup by:
+* Create an `.env` file from the example: `cp .env.sample .env`)
+* Edit `.env` to set a random string for `DJANGO_SECRET`
+* Migrate your database using `heroku local:run python manage.py migrate`
+* Initialize config with `heroku local:run python manage.py init_proj_config`
+
+Now you can run the webserver of your local heroku environment using `heroku local`.
 
 To fully set up your uploader you will have to modify some files, as described below.
 
@@ -97,7 +105,7 @@ prominently on the front page.
 
 ```
 # Give the path to the logo of your project.
-logo: ' static/example_logo.png'
+logo: ' static/default_logo.png'
 
 # Is there a larger project website where more info might be located?
 more_info_link: http://www.github.com/gedankenstuecke/oh_data_uploader

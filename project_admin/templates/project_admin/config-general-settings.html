@@ -1,0 +1,23 @@
+{% extends 'oh_connection/application.html' %}
+
+{% block content %}
+{% load utilities %}
+
+<form action="{% url 'project-admin:config-general-settings' %}" method="post">
+  {% csrf_token %}
+  <div class="form-group">
+    <label>Project title</label> <input class="form-control" name="project_title" type="text" size=60 value="{{config.project_title}}">
+  </div>
+  <div class="form-group">
+    <label>Project description</label> <input class="form-control" name="project_description" type="text" size=120 value="{{config.project_description}}">
+  </div>
+  <div class="form-group">
+    <label>More info URL (optional)</label> <input class="form-control" name="more_info_url" type="text" size=60 value="{{config.more_info_url}}">
+  </div>
+  <div class="form-group">
+    <label>Logo URL (optional)</label> <input class="form-control" name="logo_url" type="text" size=60 value="{{config.logo_url}}">
+  </div>
+  <input class="btn btn-default" type="submit" value="Save updates">
+</form>
+
+{% endblock %}
