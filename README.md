@@ -2,6 +2,8 @@
 > *it's like Jekyll for Open Humans*
 or something along the lines.
 
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
+
 Ultimately this should be an easy to deploy Django project that functions as a
 file uploader for individual *Open Humans* projects. It should be easy deploy to
 *heroku* and the configuration/styling of the project website should be done more

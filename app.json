@@ -1,0 +1,24 @@
+{
+  "name": "Open Humans Data Uploader",
+  "description": "A web app to support data uploads to an Open Humans project",
+  "repository": "https://github.com/madprime/oh_data_uploader",
+  "keywords": ["django"],
+  "env": {
+    "HEROKUCONFIG_APP_NAME": {
+      "description": "Heroku \"App name\" (copy/paste what you set above)",
+      "required": true
+    },
+    "OH_CLIENT_ID": {
+      "description": "Needs to be set to connect to a project you created in Open Humans.",
+      "value": "replace-with-Open-Humans-Client-ID"
+    },
+    "OH_CLIENT_SECRET": {
+      "description": "Needs to be set to connect to a project you created in Open Humans.",
+      "value": "replace-with-Open-Humans-Client-secret"
+    },
+    "SECRET_KEY": {
+      "description": "This is set for you and is used to encrypt data.",
+      "generator": "secret"
+    }
+  }
+}

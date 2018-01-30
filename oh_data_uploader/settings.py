@@ -30,8 +30,9 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'whopsthereshouldbeone')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False if os.getenv('DEBUG', '').lower() == 'false' else True
 
-# Establish whether this is running on Heroku
-ON_HEROKU = os.getenv('ON_HEROKU', '').lower() == 'true'
+# Infer if this is running on Heroku based on this being set.
+HEROKUCONFIG_APP_NAME = os.getenv('HEROKUCONFIG_APP_NAME', '')
+ON_HEROKU = bool(HEROKUCONFIG_APP_NAME)
 
 if ON_HEROKU:
     ALLOWED_HOSTS = ['*']
@@ -50,7 +51,9 @@ YAML_CONFIG = yaml.load(''.join(yaml_content))
 YAML_CONFIG['file_tags_string'] = str(YAML_CONFIG['file_tags'])
 
 # Set up base URL.
-APP_BASE_URL = YAML_CONFIG.get('app_base_url', 'http://127.0.0.1:5000')
+DEFAULT_BASE_URL = ('https://{}.herokuapp.com'.format(HEROKUCONFIG_APP_NAME) if
+                    ON_HEROKU else 'http://127.0.0.1:5000')
+APP_BASE_URL = YAML_CONFIG.get('app_base_url', DEFAULT_BASE_URL)
 if APP_BASE_URL[-1] == "/":
     APP_BASE_URL = APP_BASE_URL[:-1]
 
