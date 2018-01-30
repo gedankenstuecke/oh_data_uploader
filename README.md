@@ -9,7 +9,7 @@ or less exclusively through a `yaml` configuration file and `markdown` files tha
 are rendered to HTML.
 
 ## Installation
-The *Open Humans Uploader* is written in *Python* with *Django* and is designed to be ultimately deployed
+The *Open Humans Uploader* is written in *Python 3.6+* using the *Django 2.0* library and is designed to be ultimately deployed
 to *Heroku*. To install a copy of it on MacOS you will need to install some additional modules. Here's the Step-by-Step guide.
 
  *Step 1: Install Anaconda*
