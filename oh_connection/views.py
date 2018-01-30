@@ -6,9 +6,11 @@ except ImportError:
     from urllib.error import HTTPError
 
 from django.conf import settings
-from django.contrib.auth import login
+from django.contrib.auth import login, logout
 from django.shortcuts import redirect, render
 import requests
+
+from project_admin.models import ProjectConfiguration
 
 from .models import OpenHumansMember
 from .forms import UploadFileForm
@@ -41,7 +43,8 @@ def oh_code_to_member(code):
     Exchange code for token, use this to create and return OpenHumansMember.
     If a matching OpenHumansMember already exists in db, update and return it.
     """
-    if settings.OH_CLIENT_SECRET and settings.OH_CLIENT_ID and code:
+    proj_config = ProjectConfiguration.objects.get(id=1)
+    if proj_config.oh_client_secret and proj_config.oh_client_id and code:
         print('{}/complete'.format(APP_BASE_URL))
         data = {
             'grant_type': 'authorization_code',
@@ -52,8 +55,8 @@ def oh_code_to_member(code):
             '{}/oauth2/token/'.format(OH_BASE_URL),
             data=data,
             auth=requests.auth.HTTPBasicAuth(
-                settings.OH_CLIENT_ID,
-                settings.OH_CLIENT_SECRET
+                proj_config.oh_client_id,
+                proj_config.oh_client_secret
             ))
         data = req.json()
         print("Data: {}".format(str(data)))
@@ -143,25 +146,23 @@ def index(request):
     """
     Starting page for app.
     """
-    index_text = open("_descriptions/index.md", 'r').readlines()
-    index_text = "".join(index_text)
-    context = {'client_id': settings.OH_CLIENT_ID,
+    proj_config = ProjectConfiguration.objects.get(id=1)
+    context = {'client_id': proj_config.oh_client_id,
                'redirect_uri': '{}/complete'.format(APP_BASE_URL),
-               'index_page': index_text,
-               'config': settings.YAML_CONFIG}
-    if request.user.is_authenticated:
+               'index_page': "".join(proj_config.homepage_text)}
+    if request.user.is_authenticated and request.user.username != 'admin':
         return redirect('overview')
     return render(request, 'oh_connection/index.html', context=context)
 
 
 def overview(request):
-    if request.user.is_authenticated:
+    if request.user.is_authenticated and request.user.username != 'admin':
         oh_member = request.user.openhumansmember
-        overview = open("_descriptions/overview.md", 'r').readlines()
-        overview = "".join(overview)
+        proj_config = ProjectConfiguration.objects.get(id=1)
         context = {'oh_id': oh_member.oh_id,
                    'oh_member': oh_member,
-                   "overview": overview}
+                   'access_token': oh_member.get_access_token(),
+                   "overview": "".join(proj_config.overview)}
         return render(request, 'oh_connection/overview.html', context=context)
     return redirect('index')
 
@@ -173,6 +174,7 @@ def complete(request):
     logger.debug("Received user returning from Open Humans.")
 
     form = None
+    proj_config = ProjectConfiguration.objects.get(id=1)
 
     if request.method == 'GET':
         # Exchange code for token.
@@ -192,22 +194,18 @@ def complete(request):
             oh_member = request.user.openhumansmember
 
         form = UploadFileForm()
-        upload = open("_descriptions/upload_description.md", 'r').readlines()
-        upload = "".join(upload)
         context = {'oh_id': oh_member.oh_id,
                    'oh_member': oh_member,
                    'form': form,
-                   'upload_description': upload}
+                   'upload_description': proj_config.upload_description}
         return render(request, 'oh_connection/complete.html',
                       context=context)
 
     elif request.method == 'POST':
         form = UploadFileForm(request.POST, request.FILES)
         if form.is_valid():
-            metadata = {'tags':
-                        settings.YAML_CONFIG['file_tags'],
-                        'description':
-                        settings.YAML_CONFIG['file_description']}
+            metadata = {'tags': json.loads(proj_config.file_tags),
+                        'description': proj_config.file_description}
             upload_file_to_oh(
                 request.user.openhumansmember,
                 request.FILES['file'],
@@ -217,22 +215,25 @@ def complete(request):
         return redirect('index')
 
 
+def logout_user(request):
+    if request.method == 'POST':
+        logout(request)
+    return redirect('index')
+
+
 def upload_old(request):
+    proj_config = ProjectConfiguration.objects.get(id=1)
+
     if request.user.is_authenticated:
-        upload = open("_descriptions/upload_description.md", 'r').readlines()
-        upload = "".join(upload)
-        context = {'upload_description': upload}
+        context = {'upload_description': proj_config.upload_description}
         return render(request, 'oh_connection/upload_old.html',
                       context=context)
     return redirect('index')
 
 
 def about(request):
-    about = open("_descriptions/about.md", 'r').readlines()
-    about = "".join(about)
-    faq = open("_descriptions/faq.md", 'r').readlines()
-    faq = "".join(faq)
-    context = {'about': about,
-               'faq': faq}
+    proj_config = ProjectConfiguration.objects.get(id=1)
+    context = {'about': proj_config.about,
+               'faq': proj_config.faq}
     return render(request, 'oh_connection/about.html',
                   context=context)

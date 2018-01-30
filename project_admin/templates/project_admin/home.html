@@ -1,0 +1,125 @@
+{% extends 'oh_connection/application.html' %}
+
+{% block content %}
+{% load utilities %}
+
+<h1>Current Project Configuration</h1>
+
+<h2>General information</h2>
+
+<table class="table">
+  <tbody>
+    <tr>
+      <th>Project title</th>
+      <td>{{ config.project_title }}</td>
+    </tr>
+    <tr>
+      <th>Project description</th>
+      <td>{{ config.project_description }}</td>
+    </tr>
+    <tr>
+      <th>More info URL (optional)</th>
+      <td>
+        {% if config.more_info_url %}
+          {{ config.more_info_url }}
+        {% else %}
+          <i>Not defined.</i>
+        {% endif %}
+      </td>
+    </tr>
+    <tr>
+      <th>Project logo URL</th>
+      <td>
+        {% if config.logo_url %}
+          {{ config.logo_url }}
+        {% else %}
+          <i>Not defined. Logo defaults to:
+            <code>/static/default_logo.png</code></i>
+        {% endif %}
+      </td>
+    </tr>
+    <tr>
+      <th>Project logo</th>
+      <td>
+        <img alt="Brand" src="{% if config.logo_url %}{{config.logo_url}}{% else %}/static/default_logo.png{% endif %}" height="150px" align="left">
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<p>
+  <a href="{% url 'project-admin:config-general-settings' %}" class="btn btn-primary">Configure general settings</a>
+</p>
+
+<hr>
+<h2>Open Humans configurations</h2>
+
+<table class="table">
+  <tbody>
+    <tr>
+      <th>Open Humans client ID</th>
+      <td>{{ config.oh_client_id }}</td>
+    </tr>
+    <tr>
+      <th>Open Humans client secret</th>
+      <td>{{ config.oh_client_secret }}</td>
+    </tr>
+    <tr>
+      <th>Open Humans activity page URL</th>
+      <td><a href="{{ config.oh_activity_page }}">{{ config.oh_activity_page }}</a></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>
+  <a href="{% url 'project-admin:config-oh-settings' %}" class="btn btn-primary">Configure Open Humans settings</a>
+</p>
+
+<hr>
+<h2>File information configurations</h2>
+
+<table class="table">
+  <tbody>
+    <tr>
+      <th>File description</th>
+      <td>{{ config.file_description }}</td>
+    </tr>
+    <tr>
+      <th>File tags</th>
+      <td>{{ config.file_tags }}</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>Webpage content</h2>
+
+<h3>About</h3>
+<div class="well">
+  {{ config.about|markdown }}
+</div>
+
+<h3>FAQ</h3>
+<div class="well">
+  {{ config.faq|markdown }}
+</div>
+
+<h3>Homepage text</h3>
+<div class="well">
+  {{ config.homepage_text|markdown }}
+</div>
+
+<p>
+  <a href="{% url 'project-admin:config-homepage-text' %}" class="btn btn-primary">Configure homepage text</a>
+</p>
+
+<h3>Overview</h3>
+<div class="well">
+  {{ config.overview|markdown }}
+</div>
+
+<h3>Upload Description</h3>
+<div class="well">
+  {{ config.upload_description|markdown }}
+</div>
+
+{% endblock %}

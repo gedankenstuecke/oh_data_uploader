@@ -3,10 +3,10 @@
 {% block content %}
 
       <div class="jumbotron">
-        <img alt="Brand" src="{{yaml_config.logo}}" height="150px" align="left">
-        <h1>Welcome to {{yaml_config.project_title}}</h1>
+        <img alt="Brand" src="{% if config.logo_url %}{{config.logo_url}}{% else %}/static/default_logo.png{% endif %}" height="150px" align="left">
+        <h1>Welcome to {{config.project_title}}</h1>
         <p>
-          {{yaml_config.project_description}}
+          {{config.project_description}}
         </p>
       </div>
 
@@ -19,13 +19,13 @@
           <h2>How it works</h2>
           <ol>
             <li><b>Log in or create an Open Humans account</b><br>
-              You can upload your data for <i>{{yaml_config.project_title}}</i>
+              You can upload your data for <i>{{config.project_title}}</i>
               once you have done this.
             </li>
-            <li><b>Authorize {{yaml_config.project_title}} on <i>Open Humans</i></b><br>
+            <li><b>Authorize {{config.project_title}} on <i>Open Humans</i></b><br>
               This authorizes us to deposit your archive into your Open Humans account.</li>
             <li><b>Upload your data.</b><br>
-              You will be redirected back to {{yaml_config.project_title}} and can then
+              You will be redirected back to {{config.project_title}} and can then
               upload your data.
               You'll be able to
               <a href="{{ oh_proj_page }}">access &amp; manage your data on
