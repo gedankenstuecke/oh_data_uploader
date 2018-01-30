@@ -3,6 +3,7 @@ from django.contrib.auth import get_user_model, login
 from django.shortcuts import redirect, render
 
 from .models import ProjectConfiguration
+import json
 
 User = get_user_model()
 
@@ -84,6 +85,28 @@ def config_oh_settings(request):
         return redirect('project-admin:home')
 
     return render(request, 'project_admin/config-oh-settings.html')
+
+
+def config_file_settings(request):
+    """
+    Update file metadata settings
+    """
+    if request.user.username != 'admin':
+        return redirect('project-admin:home')
+
+    project_config = ProjectConfiguration.objects.get(id=1)
+
+    if request.method == 'POST':
+        project_config.file_description = request.POST['file_description']
+        tags = request.POST['file_tags'].split(",")
+        project_config.file_tags = json.dumps(tags)
+        project_config.save()
+        return redirect('project-admin:home')
+
+    tags = ','.join(json.loads(project_config.file_tags))
+    context = {"tags": tags}
+    return render(request, 'project_admin/config-oh-settings.html',
+                  context=context)
 
 
 def config_homepage_text(request):
