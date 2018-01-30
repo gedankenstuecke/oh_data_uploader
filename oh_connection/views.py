@@ -6,7 +6,7 @@ except ImportError:
     from urllib.error import HTTPError
 
 from django.conf import settings
-from django.contrib.auth import login
+from django.contrib.auth import login, logout
 from django.shortcuts import redirect, render
 import requests
 
@@ -150,13 +150,13 @@ def index(request):
     context = {'client_id': PROJ_CONFIG.oh_client_id,
                'redirect_uri': '{}/complete'.format(APP_BASE_URL),
                'index_page': "".join(PROJ_CONFIG.homepage_text)}
-    if request.user.is_authenticated:
+    if request.user.is_authenticated and request.user.username != 'admin':
         return redirect('overview')
     return render(request, 'oh_connection/index.html', context=context)
 
 
 def overview(request):
-    if request.user.is_authenticated:
+    if request.user.is_authenticated and request.user.username != 'admin':
         oh_member = request.user.openhumansmember
         context = {'oh_id': oh_member.oh_id,
                    'oh_member': oh_member,
@@ -214,6 +214,12 @@ def complete(request):
         else:
             logger.debug('INVALID FORM')
         return redirect('index')
+
+
+def logout_user(request):
+    if request.method == 'POST':
+        logout(request)
+    return redirect('index')
 
 
 def upload_old(request):

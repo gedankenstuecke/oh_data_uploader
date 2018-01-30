@@ -51,6 +51,8 @@ APP_BASE_URL = os.getenv('APP_BASE_URL', DEFAULT_BASE_URL)
 if APP_BASE_URL[-1] == "/":
     APP_BASE_URL = APP_BASE_URL[:-1]
 
+# Admin account password for configuration.
+ADMIN_PASSWORD = os.getenv('ADMIN_PASSWORD', '')
 
 # Application definition
 

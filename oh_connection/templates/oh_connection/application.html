@@ -80,11 +80,21 @@ body {
                   <li {% if section == 'home' %} class="active" {%endif%}>
                     <a href="{% url 'index' %}">Home</a>
                   </li>
+                  {% if is_admin %}
+                  <li>
+                    <a href="{% url 'project-admin:home' %}">Project config</a>
+                  </li>
+                  {% endif %}
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                   <li {% if section == 'about' %} class="active" {%endif%}>
                     <a href="{% url 'about' %}">About</a>
                   </li>
+                  {% if request.user.is_authenticated %}
+                  <li>
+                    <form action="{% url 'logout' %}" method="post">{% csrf_token %}<input type="submit" value="Log out" style="margin-top:12px;"></form>
+                  </li>
+                  {% endif %}
                 </ul>
               </div><!--/.nav-collapse -->
             </div><!--/.container-fluid -->
