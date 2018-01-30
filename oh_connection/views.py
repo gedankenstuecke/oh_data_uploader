@@ -10,6 +10,8 @@ from django.contrib.auth import login
 from django.shortcuts import redirect, render
 import requests
 
+from project_admin.models import ProjectConfiguration
+
 from .models import OpenHumansMember
 from .forms import UploadFileForm
 logger = logging.getLogger(__name__)
@@ -21,6 +23,8 @@ OH_DIRECT_UPLOAD = OH_API_BASE + '/project/files/upload/direct/'
 OH_DIRECT_UPLOAD_COMPLETE = OH_API_BASE + '/project/files/upload/complete/'
 
 APP_BASE_URL = settings.APP_BASE_URL
+
+PROJ_CONFIG = ProjectConfiguration.objects.get(id=1)
 
 
 def oh_get_member_data(token):
@@ -41,7 +45,7 @@ def oh_code_to_member(code):
     Exchange code for token, use this to create and return OpenHumansMember.
     If a matching OpenHumansMember already exists in db, update and return it.
     """
-    if settings.OH_CLIENT_SECRET and settings.OH_CLIENT_ID and code:
+    if PROJ_CONFIG.oh_client_secret and PROJ_CONFIG.oh_client_id and code:
         print('{}/complete'.format(APP_BASE_URL))
         data = {
             'grant_type': 'authorization_code',
@@ -52,8 +56,8 @@ def oh_code_to_member(code):
             '{}/oauth2/token/'.format(OH_BASE_URL),
             data=data,
             auth=requests.auth.HTTPBasicAuth(
-                settings.OH_CLIENT_ID,
-                settings.OH_CLIENT_SECRET
+                PROJ_CONFIG.oh_client_id,
+                PROJ_CONFIG.oh_client_secret
             ))
         data = req.json()
         print("Data: {}".format(str(data)))
@@ -143,12 +147,9 @@ def index(request):
     """
     Starting page for app.
     """
-    index_text = open("_descriptions/index.md", 'r').readlines()
-    index_text = "".join(index_text)
-    context = {'client_id': settings.OH_CLIENT_ID,
+    context = {'client_id': PROJ_CONFIG.oh_client_id,
                'redirect_uri': '{}/complete'.format(APP_BASE_URL),
-               'index_page': index_text,
-               'config': settings.YAML_CONFIG}
+               'index_page': "".join(PROJ_CONFIG.homepage_text)}
     if request.user.is_authenticated:
         return redirect('overview')
     return render(request, 'oh_connection/index.html', context=context)
@@ -157,11 +158,9 @@ def index(request):
 def overview(request):
     if request.user.is_authenticated:
         oh_member = request.user.openhumansmember
-        overview = open("_descriptions/overview.md", 'r').readlines()
-        overview = "".join(overview)
         context = {'oh_id': oh_member.oh_id,
                    'oh_member': oh_member,
-                   "overview": overview}
+                   "overview": "".join(PROJ_CONFIG.overview)}
         return render(request, 'oh_connection/overview.html', context=context)
     return redirect('index')
 
@@ -205,9 +204,9 @@ def complete(request):
         form = UploadFileForm(request.POST, request.FILES)
         if form.is_valid():
             metadata = {'tags':
-                        settings.YAML_CONFIG['file_tags'],
+                        json.loads(PROJ_CONFIG.file_tags),
                         'description':
-                        settings.YAML_CONFIG['file_description']}
+                        PROJ_CONFIG.file_description}
             upload_file_to_oh(
                 request.user.openhumansmember,
                 request.FILES['file'],

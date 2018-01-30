@@ -12,7 +12,6 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 
 import os
 import dj_database_url
-import yaml
 from env_tools import apply_env
 
 apply_env()
@@ -45,15 +44,10 @@ OH_BASE_URL = 'https://www.openhumans.org'
 OH_CLIENT_ID = os.getenv('OH_CLIENT_ID')
 OH_CLIENT_SECRET = os.getenv('OH_CLIENT_SECRET')
 
-# Read config from config.yaml
-yaml_content = open('config.yaml').readlines()
-YAML_CONFIG = yaml.load(''.join(yaml_content))
-YAML_CONFIG['file_tags_string'] = str(YAML_CONFIG['file_tags'])
-
 # Set up base URL.
 DEFAULT_BASE_URL = ('https://{}.herokuapp.com'.format(HEROKUCONFIG_APP_NAME) if
                     ON_HEROKU else 'http://127.0.0.1:5000')
-APP_BASE_URL = YAML_CONFIG.get('app_base_url', DEFAULT_BASE_URL)
+APP_BASE_URL = os.getenv('APP_BASE_URL', DEFAULT_BASE_URL)
 if APP_BASE_URL[-1] == "/":
     APP_BASE_URL = APP_BASE_URL[:-1]
 
@@ -67,7 +61,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'oh_connection.apps.OhConnectionConfig'
+    'oh_connection.apps.OhConnectionConfig',
+    'project_admin.apps.ProjectAdminConfig',
 ]
 
 MIDDLEWARE = [

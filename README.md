@@ -40,6 +40,7 @@ Once this is done you can complete minimal setup by:
 * Create an `.env` file from the example: `cp .env.sample .env`)
 * Edit `.env` to set a random string for `DJANGO_SECRET`
 * Migrate your database using `heroku local:run python manage.py migrate`
+* Initialize config with `heroku local:run python manage.py init_proj_config`
 
 Now you can run the webserver of your local heroku environment using `heroku local`.
 
@@ -104,7 +105,7 @@ prominently on the front page.
 
 ```
 # Give the path to the logo of your project.
-logo: ' static/example_logo.png'
+logo: ' static/default_logo.png'
 
 # Is there a larger project website where more info might be located?
 more_info_link: http://www.github.com/gedankenstuecke/oh_data_uploader
