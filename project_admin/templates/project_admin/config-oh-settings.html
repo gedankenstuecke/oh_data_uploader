@@ -5,16 +5,16 @@
 
 <form action="{% url 'project-admin:config-oh-settings' %}" method="post">
   {% csrf_token %}
-  <p>
-    Client ID: <input name="client_id" size=60 type="text" value="{{config.oh_client_id}}">
-  </p>
-  <p>
-    Client secret: <input name="client_secret" type="text" size=60 value="{{config.oh_client_secret}}">
-  </p>
-  <p>
-    Activity page URL: <input name="activity_page" type="text" size=60 value="{{config.oh_activity_page}}">
-  </p>
-  <input type="submit" value="Save updates">
+  <div class="form-group">
+    <label>Client ID</label> <input class="form-control" name="client_id" size=60 type="text" value="{{config.oh_client_id}}">
+  </div>
+  <div class="form-group">
+    <label>Client secret</label> <input class="form-control" name="client_secret" type="text" size=60 value="{{config.oh_client_secret}}">
+  </div>
+  <div class="form-group">
+    <label>Activity page URL</label> <input class="form-control" name="activity_page" type="text" size=60 value="{{config.oh_activity_page}}">
+  </div>
+  <input type="submit" class="btn btn-default" value="Save updates">
 </form>
 
 {% endblock %}

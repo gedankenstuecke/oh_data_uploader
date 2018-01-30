@@ -92,7 +92,7 @@ body {
                   </li>
                   {% if request.user.is_authenticated %}
                   <li>
-                    <form action="{% url 'logout' %}" method="post">{% csrf_token %}<input type="submit" value="Log out" style="margin-top:12px;"></form>
+                    <form action="{% url 'logout' %}" method="post">{% csrf_token %}<input type="submit" value="Log out" style="margin-top:6px;" class="btn btn-default"></form>
                   </li>
                   {% endif %}
                 </ul>

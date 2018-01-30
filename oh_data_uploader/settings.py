@@ -33,11 +33,7 @@ DEBUG = False if os.getenv('DEBUG', '').lower() == 'false' else True
 HEROKUCONFIG_APP_NAME = os.getenv('HEROKUCONFIG_APP_NAME', '')
 ON_HEROKU = bool(HEROKUCONFIG_APP_NAME)
 
-if ON_HEROKU:
-    ALLOWED_HOSTS = ['*']
-else:
-    ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = ['*']
 
 # Read OH settings from .env/environment variables
 OH_BASE_URL = 'https://www.openhumans.org'

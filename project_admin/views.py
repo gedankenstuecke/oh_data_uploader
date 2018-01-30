@@ -60,7 +60,8 @@ def config_general_settings(request):
     if request.method == 'POST':
         project_config = ProjectConfiguration.objects.get(id=1)
         project_config.project_title = request.POST['project_title']
-        project_config.project_description = request.POST['project_description']
+        project_config.project_description = request.POST[
+            'project_description']
         project_config.more_info_url = request.POST['more_info_url']
         project_config.logo_url = request.POST['logo_url']
         project_config.save()
@@ -98,14 +99,15 @@ def config_file_settings(request):
 
     if request.method == 'POST':
         project_config.file_description = request.POST['file_description']
-        tags = request.POST['file_tags'].split(",")
-        project_config.file_tags = json.dumps(tags)
+        tags = request.POST['file_tags']
+        print(tags)
+        project_config.file_tags = json.dumps(tags.split(","))
         project_config.save()
         return redirect('project-admin:home')
 
     tags = ','.join(json.loads(project_config.file_tags))
     context = {"tags": tags}
-    return render(request, 'project_admin/config-oh-settings.html',
+    return render(request, 'project_admin/config-file-settings.html',
                   context=context)
 
 
