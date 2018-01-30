@@ -6,16 +6,16 @@
 <form action="{% url 'project-admin:config-general-settings' %}" method="post">
   {% csrf_token %}
   <p>
-    Project title: <input name="project_title" type="text" size=60 value={{config.project_title}}>
+    Project title: <input name="project_title" type="text" size=60 value="{{config.project_title}}">
   </p>
   <p>
-    Project title: <input name="project_description" type="text" size=60 value={{config.project_description}}>
+    Project description: <input name="project_description" type="text" size=120 value="{{config.project_description}}">
   </p>
   <p>
-    More info URL (optional): <input name="more_info_url" type="text" size=60 value={{config.more_info_url}}>
+    More info URL (optional): <input name="more_info_url" type="text" size=60 value="{{config.more_info_url}}">
   </p>
   <p>
-    Logo URL (optional): <input name="logo_url" type="text" size=60 value={{config.logo_url}}>
+    Logo URL (optional): <input name="logo_url" type="text" size=60 value="{{config.logo_url}}">
   </p>
   <input type="submit" value="Save updates">
 </form>
