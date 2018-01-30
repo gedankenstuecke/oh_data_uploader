@@ -96,6 +96,10 @@ def config_homepage_text(request):
     if request.method == 'POST':
         project_config = ProjectConfiguration.objects.get(id=1)
         project_config.homepage_text = request.POST['homepage_text']
+        project_config.about = request.POST['about']
+        project_config.faq = request.POST['faq']
+        project_config.overview = request.POST['overview']
+        project_config.upload_description = request.POST['upload_description']
         project_config.save()
         return redirect('project-admin:home')
 

@@ -93,6 +93,10 @@
 
 <h2>Webpage content</h2>
 
+<p>
+  <a href="{% url 'project-admin:config-homepage-text' %}" class="btn btn-primary">Configure Webpage contents</a>
+</p>
+
 <h3>About</h3>
 <div class="well">
   {{ config.about|markdown }}
@@ -107,10 +111,6 @@
 <div class="well">
   {{ config.homepage_text|markdown }}
 </div>
-
-<p>
-  <a href="{% url 'project-admin:config-homepage-text' %}" class="btn btn-primary">Configure homepage text</a>
-</p>
 
 <h3>Overview</h3>
 <div class="well">

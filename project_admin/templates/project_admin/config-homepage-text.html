@@ -5,12 +5,42 @@
 
 <form action="{% url 'project-admin:config-homepage-text' %}" method="post">
   {% csrf_token %}
+
+  <p>
+    About text:
+  </p>
+  <p>
+    <textarea name="about" rows=30 cols=110>{{config.about}}</textarea>
+  </p>
+
+  <p>
+    FAQ:
+  </p>
+  <p>
+    <textarea name="faq" rows=30 cols=110>{{config.faq}}</textarea>
+  </p>
+
   <p>
     Homepage text:
   </p>
   <p>
     <textarea name="homepage_text" rows=30 cols=110>{{config.homepage_text}}</textarea>
   </p>
+
+  <p>
+    Overview:
+  </p>
+  <p>
+    <textarea name="overview" rows=30 cols=110>{{config.overview}}</textarea>
+  </p>
+
+  <p>
+    Upload description:
+  </p>
+  <p>
+    <textarea name="upload_description" rows=30 cols=110>{{config.upload_description}}</textarea>
+  </p>
+
   <input type="submit" value="Save update">
 </form>
 
