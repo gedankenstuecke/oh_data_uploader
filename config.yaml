@@ -20,7 +20,7 @@ file_tags:
 - 'describe the files you are uploading'
 
 # Give the path to the logo of your project.
-logo: ' static/example_logo.png'
+logo: 'static/example_logo.png'
 
 # Is there a larger project website where more info might be located?
 more_info_link: http://www.github.com/gedankenstuecke/oh_data_uploader
