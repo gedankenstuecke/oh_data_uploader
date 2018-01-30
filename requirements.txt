@@ -11,3 +11,4 @@ urllib3==1.22
 whitenoise==3.3.1
 env-tools==2.1.0
 PyYAML==3.12
+Markdown==2.6.11

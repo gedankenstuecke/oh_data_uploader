@@ -1,0 +1,15 @@
+{% extends 'oh_connection/application.html' %}
+
+{% block content %}
+{% load utilities %}
+<div class="row">
+  <div class="col-md-6">
+    {{about|markdown}}
+  </div>
+  <div class="col-md-6">
+    <h1>FAQ</h1>
+    {{faq|markdown}}
+  </div>
+</div>
+
+{% endblock %}

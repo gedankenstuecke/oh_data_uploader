@@ -2,16 +2,14 @@
 
 {% block content %}
 
-      <h1>Manage your data.</h1>
+      <h1>Manage your {{yaml_config.project_title}} data.</h1>
       <p class="lead">
-        Thank you! We have your authorization from Open Humans.
+        Thank you! We logged you in through <i>Open Humans</i>.
       </p>
       <div class="row">
         <div class="col-md-6">
-          <p>
-            Welcome to this project. Here you can manage your files and upload
-            new ones!
-          </p>
+          {% load utilities %}
+          {{overview|markdown}}
         </div>
         <div class="col-md-6">
           <div class="panel panel-default">

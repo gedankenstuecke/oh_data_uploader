@@ -143,8 +143,11 @@ def index(request):
     """
     Starting page for app.
     """
+    index_text = open("_descriptions/index.md", 'r').readlines()
+    index_text = "".join(index_text)
     context = {'client_id': settings.OH_CLIENT_ID,
                'redirect_uri': '{}/complete'.format(APP_BASE_URL),
+               'index_page': index_text,
                'config': settings.YAML_CONFIG}
     if request.user.is_authenticated:
         return redirect('overview')
@@ -154,8 +157,11 @@ def index(request):
 def overview(request):
     if request.user.is_authenticated:
         oh_member = request.user.openhumansmember
+        overview = open("_descriptions/overview.md", 'r').readlines()
+        overview = "".join(overview)
         context = {'oh_id': oh_member.oh_id,
-                   'oh_member': oh_member}
+                   'oh_member': oh_member,
+                   "overview": overview}
         return render(request, 'oh_connection/overview.html', context=context)
     return redirect('index')
 
@@ -186,17 +192,22 @@ def complete(request):
             oh_member = request.user.openhumansmember
 
         form = UploadFileForm()
+        upload = open("_descriptions/upload_description.md", 'r').readlines()
+        upload = "".join(upload)
         context = {'oh_id': oh_member.oh_id,
                    'oh_member': oh_member,
-                   'form': form}
+                   'form': form,
+                   'upload_description': upload}
         return render(request, 'oh_connection/complete.html',
                       context=context)
 
     elif request.method == 'POST':
         form = UploadFileForm(request.POST, request.FILES)
         if form.is_valid():
-            metadata = {'tags': settings.YAML_CONFIG['file_tags'],
-                        'description': settings.YAML_CONFIG['file_description']}
+            metadata = {'tags':
+                        settings.YAML_CONFIG['file_tags'],
+                        'description':
+                        settings.YAML_CONFIG['file_description']}
             upload_file_to_oh(
                 request.user.openhumansmember,
                 request.FILES['file'],
@@ -208,5 +219,20 @@ def complete(request):
 
 def upload_old(request):
     if request.user.is_authenticated:
-        return render(request, 'oh_connection/upload_old.html')
+        upload = open("_descriptions/upload_description.md", 'r').readlines()
+        upload = "".join(upload)
+        context = {'upload_description': upload}
+        return render(request, 'oh_connection/upload_old.html',
+                      context=context)
     return redirect('index')
+
+
+def about(request):
+    about = open("_descriptions/about.md", 'r').readlines()
+    about = "".join(about)
+    faq = open("_descriptions/faq.md", 'r').readlines()
+    faq = "".join(faq)
+    context = {'about': about,
+               'faq': faq}
+    return render(request, 'oh_connection/about.html',
+                  context=context)

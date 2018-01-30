@@ -7,4 +7,5 @@ urlpatterns = [
     url(r'^complete/?$', views.complete, name='complete'),
     url(r'^overview/?$', views.overview, name='overview'),
     url(r'^upload_simple/?$', views.upload_old, name='upload_old'),
+    url(r'^about/?$', views.about, name='about')
 ]

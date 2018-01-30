@@ -4,6 +4,10 @@
 
 <div class="row">
   <div class="col-md-6">
+    {% load utilities %}
+    {{upload_description|markdown}}
+  </div>
+  <div class="col-md-6">
     <h2>Upload your data</h2>
 
     <form method="post" enctype="multipart/form-data" action="{% url 'complete' %}">
@@ -20,17 +24,12 @@
       </p>
       <input class="btn btn-primary" type="submit" value="Upload your data">
     </form>
-
-  </div>
-
-  <div class="col-md-6">
-  <p class="lead">
-    A word of warning: <strong>This uploader does not work well for large files.</strong>
-    If an upload takes longer than 30 seconds to finish the website
-    will time out. In these cases <a href="{% url "index"%}">the use of the Javascript uploader</a> is preferred
-    as it does not have this limitation.
-  </p>
-
+    <p class="lead">
+      A word of warning: <strong>This uploader does not work well for large files.</strong>
+      If an upload takes longer than 30 seconds to finish the website
+      will time out. In these cases <a href="{% url "index"%}">the use of the Javascript uploader</a> is preferred
+      as it does not have this limitation.
+    </p>
   </div>
 </div>
 
