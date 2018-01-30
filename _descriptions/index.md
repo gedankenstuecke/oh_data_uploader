@@ -1,16 +1,17 @@
 # What does my project do?
 This tool allows you to easily setup your own *Open Humans* project that wants
-to collect data. You just need to set up some configuration files before you
-can deploy it *heroku*.
+to collect data.
 
-The configuration files are:
+The configuration for this project is in:
 
-- `config.yaml` in the main directory of this git repository. This contains details
-on your project that aren't secret like the title, description, where the logo can be found etc.
-- The `.env` contains the secret details that shouldn't be shared. E.g. your database setup,
-your *Open Humans* API keys etc.
-- The texts that should be displayed on this project website. In `_descriptions` you can find the
-markdown files needed to customize this template. E.g. this page is written in `_descriptions/index.md`.
+- **Environment variables:** If you deploy to Heroku, you'll probably be
+prompted to provide these, and they can be modified in the the app. Locally,
+your `.env` file defines these. These are secret details that should not be
+shared. (Be sure not to add this to your git repository!)
+- **Project configuration:** The [Project Admin page](/project-admin) can be
+used to configure other aspects of your site. Log in with the `ADMIN_PASSWORD`
+you set in environment variables.
 
-Use this page to inform your users about what your project is about and what it tries to do. It's the first
-page they will see, so be verbose!
+As you configure the project, replace this "front page" text to inform
+users what your project is about and what it tries to do. It's the first page
+they will see, so be verbose!

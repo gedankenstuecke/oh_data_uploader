@@ -49,6 +49,25 @@ def admin_login(request):
     return render(request, 'project_admin/login.html')
 
 
+def config_general_settings(request):
+    """
+    Update Open Humans project configuration.
+    """
+    if request.user.username != 'admin':
+        return redirect('project-admin:home')
+
+    if request.method == 'POST':
+        project_config = ProjectConfiguration.objects.get(id=1)
+        project_config.project_title = request.POST['project_title']
+        project_config.project_description = request.POST['project_description']
+        project_config.more_info_url = request.POST['more_info_url']
+        project_config.logo_url = request.POST['logo_url']
+        project_config.save()
+        return redirect('project-admin:home')
+
+    return render(request, 'project_admin/config-general-settings.html')
+
+
 def config_oh_settings(request):
     """
     Update Open Humans project configuration.
@@ -65,3 +84,19 @@ def config_oh_settings(request):
         return redirect('project-admin:home')
 
     return render(request, 'project_admin/config-oh-settings.html')
+
+
+def config_homepage_text(request):
+    """
+    Update Open Humans project configuration.
+    """
+    if request.user.username != 'admin':
+        return redirect('project-admin:home')
+
+    if request.method == 'POST':
+        project_config = ProjectConfiguration.objects.get(id=1)
+        project_config.homepage_text = request.POST['homepage_text']
+        project_config.save()
+        return redirect('project-admin:home')
+
+    return render(request, 'project_admin/config-homepage-text.html')

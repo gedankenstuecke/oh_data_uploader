@@ -1,0 +1,17 @@
+{% extends 'oh_connection/application.html' %}
+
+{% block content %}
+{% load utilities %}
+
+<form action="{% url 'project-admin:config-homepage-text' %}" method="post">
+  {% csrf_token %}
+  <p>
+    Homepage text:
+  </p>
+  <p>
+    <textarea name="homepage_text" rows=30 cols=110>{{config.homepage_text}}</textarea>
+  </p>
+  <input type="submit" value="Save update">
+</form>
+
+{% endblock %}

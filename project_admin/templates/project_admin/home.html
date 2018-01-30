@@ -47,6 +47,10 @@
   </tbody>
 </table>
 
+<p>
+  <a href="{% url 'project-admin:config-general-settings' %}" class="btn btn-primary">Configure general settings</a>
+</p>
+
 <hr>
 <h2>Open Humans configurations</h2>
 
@@ -103,6 +107,10 @@
 <div class="well">
   {{ config.homepage_text|markdown }}
 </div>
+
+<p>
+  <a href="{% url 'project-admin:config-homepage-text' %}" class="btn btn-primary">Configure homepage text</a>
+</p>
 
 <h3>Overview</h3>
 <div class="well">
