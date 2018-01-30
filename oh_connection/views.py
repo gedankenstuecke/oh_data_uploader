@@ -161,6 +161,7 @@ def overview(request):
         proj_config = ProjectConfiguration.objects.get(id=1)
         context = {'oh_id': oh_member.oh_id,
                    'oh_member': oh_member,
+                   'access_token': oh_member.get_access_token(),
                    "overview": "".join(proj_config.overview)}
         return render(request, 'oh_connection/overview.html', context=context)
     return redirect('index')

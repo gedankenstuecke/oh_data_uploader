@@ -27,7 +27,7 @@ class ProjectConfiguration(models.Model):
         default='https://www.openhumans.org/activity/your-project')
     file_description = models.TextField(
         help_text='Description of the type of data being uploaded.',
-        default="This is an example file that doesn't have any meaning.")
+        default="This is an example file that does not have any meaning.")
     file_tags = models.TextField(
         help_text='List of tags that describe file uploads, stored as a '
                   'JSON-formatted array',
