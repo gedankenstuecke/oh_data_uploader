@@ -1,5 +1,6 @@
 # Open Humans Uploader
-*it's like Jekyll for Open Humans* or something along the lines.
+> *it's like Jekyll for Open Humans*
+or something along the lines.
 
 Ultimately this should be an easy to deploy Django project that functions as a
 file uploader for individual *Open Humans* projects. It should be easy deploy to
@@ -73,4 +74,19 @@ more_info_link: http://www.github.com/gedankenstuecke/oh_data_uploader
 ```
 
 #### The `.env` file
-In addition to the public parameters you will need to set the parameters that 
+In addition to the public parameters you will need to set the parameters that control the API
+connection to *Open Humans* and your database. For your development environment these parameters
+can be set in the `.env` file (an example is provided in `.env.sample`):
+
+```
+DATABASE_URL=postgres:///myurl
+SECRET_KEY=mysecretshouldnotbeongit
+OH_CLIENT_ID=myclientidshouldnotbeongit
+OH_CLIENT_SECRET=myclientsecretshouldnotbeongit
+```
+
+The `DATABASE_URL` tells your uploader to which database it should connect, while the `SECRET_KEY` is used
+to keep your uploader itself safe. The `OH_CLIENT_ID` and `OH_CLIENT_SECRET` are used for the communication with
+*Open Humans*. You can find both on your project site, by [clicking on the name of your project here](https://www.openhumans.org/direct-sharing/projects/manage/).
+
+If you deploy your application to *heroku* you will not use the `.env` for the parameters, rather you will use the [config variables as described by Heroku](https://devcenter.heroku.com/articles/config-vars).
