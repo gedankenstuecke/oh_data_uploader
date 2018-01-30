@@ -8,6 +8,36 @@ file uploader for individual *Open Humans* projects. It should be easy deploy to
 or less exclusively through a `yaml` configuration file and `markdown` files that
 are rendered to HTML.
 
+## Installation
+The *Open Humans Uploader* is written in *Python* with *Django* and is designed to be ultimately deployed
+to *Heroku*. To install a copy of it on MacOS you will need to install some additional modules. Here's the Step-by-Step guide.
+
+ *Step 1: Install Anaconda*
+
+[Download & Install the appropriate version of *Anaconda* on your end](https://www.anaconda.com/download/#macos),
+this makes it easy to keep Python versions and modules clean.
+
+After you have installed *Anaconda*, create a fresh environment for the *Open Humans uploader* and install the needed Python packages:
+
+```
+conda create -n oh_uploader python=3.6
+pip install -r requirements.txt
+```
+
+*Step 2: Install heroku-CLI & PostgreSQL*
+
+If you are running MacOS the easiest way to do this is using [Homebrew](https://brew.sh/). After installing Homebrew
+you can do:
+
+```
+brew install postgres
+brew install heroku/brew/heroku
+```
+
+Once this is done you can start the setup of your *Open Humans uploader* by copying the example `.env` file (`cp .env.sample .env`) and starting the local heroku environment using `heroku local`.
+
+To fully set up your uploader you will have to modify some files, as described below: 
+
 ## Configuration
 
 ### Setting up a project on *Open Humans*
