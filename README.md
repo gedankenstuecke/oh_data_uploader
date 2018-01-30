@@ -34,9 +34,9 @@ brew install postgres
 brew install heroku/brew/heroku
 ```
 
-Once this is done you can start the setup of your *Open Humans uploader* by copying the example `.env` file (`cp .env.sample .env`) and starting the local heroku environment using `heroku local`.
+Once this is done you can start the setup of your *Open Humans uploader* by copying the example `.env` file (`cp .env.sample .env`) and entering at least your database URL. Once this is done you can migrate your database using `heroku local:run python manage.py migrate`. Afterwards you can start the webserver of your local heroku environment using `heroku local`.
 
-To fully set up your uploader you will have to modify some files, as described below: 
+To fully set up your uploader you will have to modify some files, as described below.
 
 ## Configuration
 
