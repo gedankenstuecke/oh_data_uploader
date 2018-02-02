@@ -81,7 +81,7 @@ You should install the Heroku CLI to run this app. Heroku has [installation inst
 If you are running MacOS the easiest way to do this is using [Homebrew](https://brew.sh/). After installing Homebrew you can do:
 
 ```
-brew install heroku/brew/heroku
+brew install heroku
 ```
 
 Once this is done you can complete minimal setup by:
