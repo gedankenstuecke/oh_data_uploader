@@ -58,4 +58,4 @@ This last bit is done [by writing Markdown formatted text right into the forms](
 
 ## Local Deployment and Development
 The *Open Humans Uploader* is written in *Python 3.6+*, uses the *Django 2.0* framework and is designed to be ultimately deployed
-to *Heroku*. You will need some additional modules and packages to locally experiment with this uploader template or to develop it further. A full step-by-step guide that should work for Mac OS (and with minor differences for Linux) can be found in the INSTALL.md.
+to *Heroku*. You will need some additional modules and packages to locally experiment with this uploader template or to develop it further. A full step-by-step guide that should work for Mac OS (and with minor differences for Linux) [can be found in the INSTALL.md](https://github.com/gedankenstuecke/oh_data_uploader/blob/master/INSTALL.md).

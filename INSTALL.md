@@ -1,6 +1,6 @@
 # Local Deployment and Development
 
-This tool is designed to be deployed to *heroku* (see README.md). To install it
+This tool is designed to be deployed to *heroku* ([see README.md](https://github.com/gedankenstuecke/oh_data_uploader/blob/master/README.md)). To install it
 locally to develop it further (or to deploy to non-heroku hosts) see the guidelines here:
 
 ### *Step 1: Install Anaconda and needed packages*
