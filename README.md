@@ -57,26 +57,35 @@ Once logged in you will see a page that gives you all options to edit your templ
 This last bit is done [by writing Markdown formatted text right into the forms](https://help.github.com/articles/basic-writing-and-formatting-syntax/).
 
 ## Local Deployment and Development
-The *Open Humans Uploader* is written in *Python 3.6+* using the *Django 2.0* library and is designed to be ultimately deployed
-to *Heroku*. To install a copy of it on MacOS you will need to install some additional modules. Here's the Step-by-Step guide.
+The *Open Humans Uploader* is written in *Python 3.6+*, uses the *Django 2.0* framework and is designed to be ultimately deployed
+to *Heroku*. You will need some additional modules and packages to locally experiment with this uploader template or to develop it further.
 
-**THIS IS OUTDATED RIGHT NOW**
+Below is a the step-by-step guide that should work for Mac OS and with minor differences for Linux.
 
- *Step 1: Install Anaconda*
+ *Step 1: Install Anaconda and needed packages*
 
 [Download & Install the appropriate version of *Anaconda* on your end](https://www.anaconda.com/download/#macos),
 this makes it easy to keep Python versions and modules clean. If you are already familiar with [*virtualenv*](https://virtualenv.pypa.io/en/stable/) you can use their workflow instead of *Anaconda*.
 
-After you have installed *Anaconda*, create a fresh environment for the *Open Humans uploader* and install the needed Python packages:
+After you have installed *Anaconda*, create a fresh environment for the *Open Humans uploader* and activate it:
 
 ```
 conda create -n oh_uploader python=3.6
+source activate oh_uploader
+```
+
+Now you can install the packages needed to locally run the `oh_data_uploader` by navigating into the
+directory of the `oh_data_uploader` and running pip:
+
+```
+cd oh_data_uploader/
 pip install -r requirements.txt
 ```
 
 *Step 2: Install Heroku Command Line Interface (CLI)*
 
-You should install the Heroku CLI to run this app. Heroku has [installation instructions for MacOS, Windows, and Linux](https://devcenter.heroku.com/articles/heroku-cli#download-and-install).
+You should install the Heroku CLI to run this app locally.
+Heroku has [installation instructions for MacOS, Windows, and Linux](https://devcenter.heroku.com/articles/heroku-cli#download-and-install).
 
 If you are running MacOS the easiest way to do this is using [Homebrew](https://brew.sh/). After installing Homebrew you can do:
 
