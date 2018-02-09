@@ -3,6 +3,16 @@
 
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
 
+- [Open Humans Uploader](#open-humans-uploader)
+  * [Deployment to *heroku*.](#deployment-to-heroku)
+    + [**Step 1**: Click the *deploy to heroku* button above.](#step-1-click-the-deploy-to-heroku-button-above)
+    + [**Step 2**: Fill out the parameters that *heroku* asks you](#step-2-fill-out-the-parameters-that-heroku-asks-you)
+    + [**Step 3**: Create your project on *Open Humans*](#step-3-create-your-project-on-open-humans)
+    + [**Step 4**: Grab your Oauth credentials from *Open Humans*](#step-4-grab-your-oauth-credentials-from-open-humans)
+    + [**Step 5**: Finalize your Uploader setup](#step-5-finalize-your-uploader-setup)
+  * [Local Deployment and Development](#local-deployment-and-development)
+  * [Contributing](#contributing
+
 This is a Django project that functions as a
 file uploader for individual *Open Humans* projects. It can easily be deployed to
 *heroku* and all the configuration can be done through your web browser once the project is deployed. A step-by-step guide can be found below
