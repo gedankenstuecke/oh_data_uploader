@@ -11,7 +11,7 @@
     + [**Step 4**: Grab your Oauth credentials from *Open Humans*](#step-4-grab-your-oauth-credentials-from-open-humans)
     + [**Step 5**: Finalize your Uploader setup](#step-5-finalize-your-uploader-setup)
   * [Local Deployment and Development](#local-deployment-and-development)
-  * [Contributing](#contributing
+  * [Contributing](#contributing)
 
 This is a Django project that functions as a
 file uploader for individual *Open Humans* projects. It can easily be deployed to
