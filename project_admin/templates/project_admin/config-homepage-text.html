@@ -2,6 +2,12 @@
 
 {% block content %}
 {% load utilities %}
+<p class="lead">
+  You can use <a href="https://en.wikipedia.org/wiki/Markdown">
+    Markdown</a> to write these pages. If you are new to this:
+  <i>Github</i> has a <a href="https://guides.github.com/features/mastering-markdown/#syntax">
+    good beginners guide on how to write Markdown</a>!
+</p>
 
 <form action="{% url 'project-admin:config-homepage-text' %}" method="post">
   {% csrf_token %}
