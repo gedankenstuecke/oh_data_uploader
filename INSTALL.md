@@ -28,11 +28,19 @@ pip install -r requirements.txt
 You should install the Heroku CLI to run this app locally.
 Heroku has [installation instructions for MacOS, Windows, and Linux](https://devcenter.heroku.com/articles/heroku-cli#download-and-install).
 
-If you are running MacOS the easiest way to do this is using [Homebrew](https://brew.sh/). After installing Homebrew you can do:
+If you are running MacOS the easiest way to do this is using [Homebrew](https://brew.sh/). After installing Homebrew you have two options:
+
+Simply run:
+`brew install heroku/brew/heroku`
+
+Or
 
 ```
+brew tap heroku/brew
 brew install heroku
 ```
+
+This second options adds the Heroku repository to your Homebrew configuration allowing you to access all of the Heroku library rather than the single `heroku` application.
 
 ### *Step 3: Set-up the local `.env` file*
 Once this is done you can complete minimal setup by:
