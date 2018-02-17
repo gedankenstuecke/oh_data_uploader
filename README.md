@@ -31,7 +31,7 @@ Log in into your existing *heroku* account or create a new one. (This Uploader i
 
 ![](docs/deploy_heroku.png)
 
-*heroku* asks you to give your app a name, for this demo we use `ohuploadertemplatetest`. Repeat this name below for the `HEROKUCONFIG_APP_NAME`. The second important parameter is the `ADMIN_PASSWORD`. You will later need this to connect your uploader to *Open Humans* and to customize your uploader. Onxe you have entered this information you click on *deploy app* and after a while you should get a success message.
+*heroku* asks you to give your app a name, for this demo we use `ohuploadertemplatetest`. Repeat this name below for the `HEROKUCONFIG_APP_NAME`. The second important parameter is the `ADMIN_PASSWORD`. You will later need this to connect your uploader to *Open Humans* and to customize your uploader. Once you have entered this information you click on *deploy app* and after a while you should get a success message.
 
 Now your uploader should be available at `https://ohuploadertemplatetest.herokuapp.com/`.
 
