@@ -6,13 +6,13 @@
 <form action="{% url 'project-admin:config-oh-settings' %}" method="post">
   {% csrf_token %}
   <div class="form-group">
-    <label>Client ID</label> <input class="form-control" name="client_id" size=60 type="text" placeholder="replace-with-Open-Humans-Client-ID">
+    <label>Client ID</label> <input class="form-control" name="client_id" size=60 type="text" value="{{config.oh_client_id}}">
   </div>
   <div class="form-group">
-    <label>Client secret</label> <input class="form-control" name="client_secret" type="text" size=60 placeholder="replace-with-Open-Humans-Client-secret">
+    <label>Client secret</label> <input class="form-control" name="client_secret" type="text" size=60 value="{{config.oh_client_secret}}">
   </div>
   <div class="form-group">
-    <label>Activity page URL</label> <input class="form-control" name="activity_page" type="text" size=60 placeholder="https://www.openhumans.org/activity/your-project">
+    <label>Activity page URL</label> <input class="form-control" name="activity_page" type="text" size=60 value="{{config.oh_activity_page}}">
   </div>
   <input type="submit" class="btn btn-default" value="Save updates">
 </form>
