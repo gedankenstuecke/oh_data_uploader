@@ -13,10 +13,10 @@ class ProjectConfiguration(models.Model):
         default='My Open Humans Project')
     oh_client_id = models.CharField(
         max_length=40,
-        default='replace-with-Open-Humans-Client-ID')
+        blank=True)
     oh_client_secret = models.CharField(
         max_length=128,
-        default='replace-with-Open-Humans-Client-secret')
+        blank=True)
 
     project_description = models.TextField(
         default='This template demonstrates how you can run your own Open '
@@ -24,7 +24,7 @@ class ProjectConfiguration(models.Model):
         help_text='Project description, displayed on the front page.')
     oh_activity_page = models.TextField(
         help_text='The URL where we can find your project in Open Humans.',
-        default='https://www.openhumans.org/activity/your-project')
+        blank=True)
     file_description = models.TextField(
         help_text='Description of the type of data being uploaded.',
         default="This is an example file that does not have any meaning.")
