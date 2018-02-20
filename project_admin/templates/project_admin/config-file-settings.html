@@ -6,10 +6,10 @@
 <form action="{% url 'project-admin:config-file-settings' %}" method="post">
   {% csrf_token %}
   <div class="form-group">
-    <label>File description</label> <input class="form-control" name="file_description" size=60 type="text" value="{{config.file_description}}">
+    <label>File description</label> <input class="form-control" name="file_description" size=60 type="text" value="{{config.file_description}}" placeholder="This is an example file that does not have any meaning">
   </div>
   <div class="form-group">
-    <label>File tags (comma separated)</label> <input class="form-control" name="file_tags" type="text" size=60 value="{{tags}}">
+    <label>File tags (comma separated)</label> <input class="form-control" name="file_tags" type="text" size=60 value="{{tags}}" placeholder="tags,are a good way to,describe the files you are uploading">
   </div>
   <input type="submit" class="btn btn-default" value="Save updates">
 </form>
