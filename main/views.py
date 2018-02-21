@@ -10,9 +10,9 @@ from django.contrib.auth import login, logout
 from django.shortcuts import redirect, render
 import requests
 
+from open_humans.models import OpenHumansMember
 from project_admin.models import ProjectConfiguration
 
-from .models import OpenHumansMember
 from .forms import UploadFileForm
 logger = logging.getLogger(__name__)
 
@@ -152,7 +152,7 @@ def index(request):
                'index_page': "".join(proj_config.homepage_text)}
     if request.user.is_authenticated and request.user.username != 'admin':
         return redirect('overview')
-    return render(request, 'oh_connection/index.html', context=context)
+    return render(request, 'main/index.html', context=context)
 
 
 def overview(request):
@@ -163,7 +163,7 @@ def overview(request):
                    'oh_member': oh_member,
                    'access_token': oh_member.get_access_token(),
                    "overview": "".join(proj_config.overview)}
-        return render(request, 'oh_connection/overview.html', context=context)
+        return render(request, 'main/overview.html', context=context)
     return redirect('index')
 
 
@@ -198,7 +198,7 @@ def complete(request):
                    'oh_member': oh_member,
                    'form': form,
                    'upload_description': proj_config.upload_description}
-        return render(request, 'oh_connection/complete.html',
+        return render(request, 'main/complete.html',
                       context=context)
 
     elif request.method == 'POST':
@@ -226,7 +226,7 @@ def upload_old(request):
 
     if request.user.is_authenticated:
         context = {'upload_description': proj_config.upload_description}
-        return render(request, 'oh_connection/upload_old.html',
+        return render(request, 'main/upload_old.html',
                       context=context)
     return redirect('index')
 
@@ -235,5 +235,5 @@ def about(request):
     proj_config = ProjectConfiguration.objects.get(id=1)
     context = {'about': proj_config.about,
                'faq': proj_config.faq}
-    return render(request, 'oh_connection/about.html',
+    return render(request, 'main/about.html',
                   context=context)

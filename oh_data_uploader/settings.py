@@ -59,7 +59,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'oh_connection.apps.OhConnectionConfig',
+    'main.apps.Main',
+    'open_humans.apps.OpenHumansConfig',
     'project_admin.apps.ProjectAdminConfig',
 ]
 
@@ -87,7 +88,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'oh_connection.context_processors.read_config'
+                'main.context_processors.read_config'
             ],
         },
     },
