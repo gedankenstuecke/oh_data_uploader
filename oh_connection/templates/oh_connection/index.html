@@ -6,7 +6,7 @@
         <img alt="Brand" src="{% if config.logo_url %}{{config.logo_url}}{% else %}/static/default_logo.png{% endif %}" height="150px" align="left">
         <h1>Welcome to {{ config.project_title|default:"My Open Humans Project" }}</h1>
         <p>
-          {{config.project_description}}
+          {{config.project_description|default:"This template demonstrates how you can run your own Open Humans data upload project"}}
         </p>
       </div>
 
