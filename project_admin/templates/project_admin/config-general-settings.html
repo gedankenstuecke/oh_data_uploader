@@ -6,7 +6,7 @@
 <form action="{% url 'project-admin:config-general-settings' %}" method="post">
   {% csrf_token %}
   <div class="form-group">
-    <label>Project title</label> <input class="form-control" name="project_title" type="text" size=60 value="{{config.project_title}}" placeholder="My Open Humans Project">
+    <label>Project title</label> <input class="form-control" name="project_title" type="text" size=60 value="{{config.project_title}}">
   </div>
   <div class="form-group">
     <label>Project description</label> <input class="form-control" name="project_description" type="text" size=120 value="{{config.project_description}}" placeholder="This template demonstrates how you can run your own Open Humans data upload project">
