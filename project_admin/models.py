@@ -45,6 +45,11 @@ class ProjectConfiguration(models.Model):
     overview = models.TextField(blank=True)
     upload_description = models.TextField(blank=True)
 
+    @property
+    def client_info(self):
+        return {'client_id': self.oh_client_id,
+                'client_secret': self.oh_client_secret}
+
     def save(self, *args, **kwargs):
         if ProjectConfiguration.objects.exists() and not self.pk:
             raise ValidationError('Only one ProjectConfiguration allowed')
