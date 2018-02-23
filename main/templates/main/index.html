@@ -1,4 +1,4 @@
-{% extends 'oh_connection/application.html' %}
+{% extends 'main/application.html' %}
 
 {% block content %}
 
@@ -33,7 +33,7 @@
             </li>
           </ol>
           <a class="btn btn-primary btn-lg"
-            href="https://www.openhumans.org/direct-sharing/projects/oauth2/authorize/?client_id={{ client_id }}&response_type=code{% if redirect_uri %}&redirect_uri={{redirect_uri}}{% endif %}">
+            href="{{ auth_url }}">
               Get started / Login
           </a>
           <h2>FAQ</h2>

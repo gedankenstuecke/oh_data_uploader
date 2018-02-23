@@ -8,34 +8,21 @@ except ImportError:
 from django.conf import settings
 from django.contrib.auth import login, logout
 from django.shortcuts import redirect, render
+import ohapi
 import requests
 
+from open_humans.models import OpenHumansMember
 from project_admin.models import ProjectConfiguration
 
-from .models import OpenHumansMember
 from .forms import UploadFileForm
 logger = logging.getLogger(__name__)
 
-OH_BASE_URL = settings.OH_BASE_URL
+OH_BASE_URL = settings.OPENHUMANS_OH_BASE_URL
 OH_API_BASE = OH_BASE_URL + '/api/direct-sharing'
-OH_DELETE_FILES = OH_API_BASE + '/project/files/delete/'
 OH_DIRECT_UPLOAD = OH_API_BASE + '/project/files/upload/direct/'
 OH_DIRECT_UPLOAD_COMPLETE = OH_API_BASE + '/project/files/upload/complete/'
 
-APP_BASE_URL = settings.APP_BASE_URL
-
-
-def oh_get_member_data(token):
-    """
-    Exchange OAuth2 token for member data.
-    """
-    req = requests.get(
-        '{}/api/direct-sharing/project/exchange-member/'.format(OH_BASE_URL),
-        params={'access_token': token})
-    if req.status_code == 200:
-        return req.json()
-    raise Exception('Status code {}'.format(req.status_code))
-    return None
+OH_OAUTH2_REDIRECT_URI = '{}/complete'.format(settings.OPENHUMANS_APP_BASE_URL)
 
 
 def oh_code_to_member(code):
@@ -44,60 +31,45 @@ def oh_code_to_member(code):
     If a matching OpenHumansMember already exists in db, update and return it.
     """
     proj_config = ProjectConfiguration.objects.get(id=1)
-    if proj_config.oh_client_secret and proj_config.oh_client_id and code:
-        print('{}/complete'.format(APP_BASE_URL))
-        data = {
-            'grant_type': 'authorization_code',
-            'redirect_uri': '{}/complete'.format(APP_BASE_URL),
-            'code': code,
-        }
-        req = requests.post(
-            '{}/oauth2/token/'.format(OH_BASE_URL),
-            data=data,
-            auth=requests.auth.HTTPBasicAuth(
-                proj_config.oh_client_id,
-                proj_config.oh_client_secret
-            ))
-        data = req.json()
-        print("Data: {}".format(str(data)))
-        if 'access_token' in data:
-            oh_id = oh_get_member_data(
-                data['access_token'])['project_member_id']
-            try:
-                oh_member = OpenHumansMember.objects.get(oh_id=oh_id)
-                logger.debug('Member {} re-authorized.'.format(oh_id))
-                oh_member.access_token = data['access_token']
-                oh_member.refresh_token = data['refresh_token']
-                oh_member.token_expires = OpenHumansMember.get_expiration(
-                    data['expires_in'])
-            except OpenHumansMember.DoesNotExist:
-                oh_member = OpenHumansMember.create(
-                    oh_id=oh_id,
-                    access_token=data['access_token'],
-                    refresh_token=data['refresh_token'],
-                    expires_in=data['expires_in'])
-                logger.debug('Member {} created.'.format(oh_id))
-            oh_member.save()
-
-            return oh_member
-        elif 'error' in req.json():
-            logger.debug('Error in token exchange: {}'.format(req.json()))
-        else:
-            logger.warning('Neither token nor error info in OH response!')
-    else:
+    if not (proj_config.oh_client_secret and
+            proj_config.oh_client_id and code):
         logger.error('OH_CLIENT_SECRET or code are unavailable')
-    return None
+        return None
 
+    data = ohapi.api.oauth2_token_exchange(
+        client_id=proj_config.oh_client_id,
+        client_secret=proj_config.oh_client_secret,
+        code=code,
+        redirect_uri=OH_OAUTH2_REDIRECT_URI,
+        base_url=OH_BASE_URL)
 
-def delete_all_oh_files(oh_member):
-    """
-    Delete all current project files in Open Humans for this project member.
-    """
-    requests.post(
-        OH_DELETE_FILES,
-        params={'access_token': oh_member.get_access_token()},
-        data={'project_member_id': oh_member.oh_id,
-              'all_files': True})
+    if 'error' in data:
+        logger.debug('Error in token exchange: {}'.format(data))
+        return None
+
+    if 'access_token' in data:
+        oh_id = ohapi.api.exchange_oauth2_member(
+            access_token=data['access_token'])['project_member_id']
+        try:
+            oh_member = OpenHumansMember.objects.get(oh_id=oh_id)
+            logger.debug('Member {} re-authorized.'.format(oh_id))
+            oh_member.access_token = data['access_token']
+            oh_member.refresh_token = data['refresh_token']
+            oh_member.token_expires = OpenHumansMember.get_expiration(
+                data['expires_in'])
+        except OpenHumansMember.DoesNotExist:
+            oh_member = OpenHumansMember.create(
+                oh_id=oh_id,
+                access_token=data['access_token'],
+                refresh_token=data['refresh_token'],
+                expires_in=data['expires_in'])
+            logger.debug('Member {} created.'.format(oh_id))
+        oh_member.save()
+
+        return oh_member
+    else:
+        logger.warning('Neither token nor error info in OH response!')
+        return None
 
 
 def upload_file_to_oh(oh_member, filehandle, metadata):
@@ -110,11 +82,16 @@ def upload_file_to_oh(oh_member, filehandle, metadata):
     Open Humans, 2. Perform the upload, 3. Notify Open Humans when complete.
     """
     # Remove any previous file - replace with this one.
-    delete_all_oh_files(oh_member)
+    client_info = ProjectConfiguration.objects.get(id=1).client_info
+
+    ohapi.api.delete_files(
+        project_member_id=oh_member.oh_id,
+        access_token=oh_member.get_access_token(**client_info),
+        all_files=True)
 
     # Get the S3 target from Open Humans.
     upload_url = '{}?access_token={}'.format(
-        OH_DIRECT_UPLOAD, oh_member.get_access_token())
+        OH_DIRECT_UPLOAD, oh_member.get_access_token(**client_info))
     req1 = requests.post(
         upload_url,
         data={'project_member_id': oh_member.oh_id,
@@ -132,7 +109,7 @@ def upload_file_to_oh(oh_member, filehandle, metadata):
 
     # Report completed upload to Open Humans.
     complete_url = ('{}?access_token={}'.format(
-        OH_DIRECT_UPLOAD_COMPLETE, oh_member.get_access_token()))
+        OH_DIRECT_UPLOAD_COMPLETE, oh_member.get_access_token(**client_info)))
     req3 = requests.post(
         complete_url,
         data={'project_member_id': oh_member.oh_id,
@@ -147,23 +124,26 @@ def index(request):
     Starting page for app.
     """
     proj_config = ProjectConfiguration.objects.get(id=1)
-    context = {'client_id': proj_config.oh_client_id,
-               'redirect_uri': '{}/complete'.format(APP_BASE_URL),
+    auth_url = ohapi.api.oauth2_auth_url(
+        client_id=proj_config.oh_client_id,
+        redirect_uri=OH_OAUTH2_REDIRECT_URI)
+    context = {'auth_url': auth_url,
                'index_page': "".join(proj_config.homepage_text)}
     if request.user.is_authenticated and request.user.username != 'admin':
         return redirect('overview')
-    return render(request, 'oh_connection/index.html', context=context)
+    return render(request, 'main/index.html', context=context)
 
 
 def overview(request):
+    client_info = ProjectConfiguration.objects.get(id=1).client_info
     if request.user.is_authenticated and request.user.username != 'admin':
         oh_member = request.user.openhumansmember
         proj_config = ProjectConfiguration.objects.get(id=1)
         context = {'oh_id': oh_member.oh_id,
                    'oh_member': oh_member,
-                   'access_token': oh_member.get_access_token(),
+                   'access_token': oh_member.get_access_token(**client_info),
                    "overview": "".join(proj_config.overview)}
-        return render(request, 'oh_connection/overview.html', context=context)
+        return render(request, 'main/overview.html', context=context)
     return redirect('index')
 
 
@@ -180,7 +160,6 @@ def complete(request):
         # Exchange code for token.
         # This creates an OpenHumansMember and associated User account.
         code = request.GET.get('code', '')
-        print("CODE {}".format(code))
         oh_member = oh_code_to_member(code=code)
         if oh_member:
             # Log in the user.
@@ -198,7 +177,7 @@ def complete(request):
                    'oh_member': oh_member,
                    'form': form,
                    'upload_description': proj_config.upload_description}
-        return render(request, 'oh_connection/complete.html',
+        return render(request, 'main/complete.html',
                       context=context)
 
     elif request.method == 'POST':
@@ -226,7 +205,7 @@ def upload_old(request):
 
     if request.user.is_authenticated:
         context = {'upload_description': proj_config.upload_description}
-        return render(request, 'oh_connection/upload_old.html',
+        return render(request, 'main/upload_old.html',
                       context=context)
     return redirect('index')
 
@@ -235,5 +214,5 @@ def about(request):
     proj_config = ProjectConfiguration.objects.get(id=1)
     context = {'about': proj_config.about,
                'faq': proj_config.faq}
-    return render(request, 'oh_connection/about.html',
+    return render(request, 'main/about.html',
                   context=context)

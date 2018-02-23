@@ -36,16 +36,16 @@ ON_HEROKU = bool(HEROKUCONFIG_APP_NAME)
 ALLOWED_HOSTS = ['*']
 
 # Read OH settings from .env/environment variables
-OH_BASE_URL = 'https://www.openhumans.org'
-OH_CLIENT_ID = os.getenv('OH_CLIENT_ID')
-OH_CLIENT_SECRET = os.getenv('OH_CLIENT_SECRET')
+OPENHUMANS_OH_BASE_URL = 'https://www.openhumans.org'
+OPENHUMANS_CLIENT_ID = os.getenv('OH_CLIENT_ID')
+OPENHUMANS_CLIENT_SECRET = os.getenv('OH_CLIENT_SECRET')
 
 # Set up base URL.
 DEFAULT_BASE_URL = ('https://{}.herokuapp.com'.format(HEROKUCONFIG_APP_NAME) if
                     ON_HEROKU else 'http://127.0.0.1:5000')
-APP_BASE_URL = os.getenv('APP_BASE_URL', DEFAULT_BASE_URL)
-if APP_BASE_URL[-1] == "/":
-    APP_BASE_URL = APP_BASE_URL[:-1]
+OPENHUMANS_APP_BASE_URL = os.getenv('APP_BASE_URL', DEFAULT_BASE_URL)
+if OPENHUMANS_APP_BASE_URL[-1] == "/":
+    OPENHUMANS_APP_BASE_URL = OPENHUMANS_APP_BASE_URL[:-1]
 
 # Admin account password for configuration.
 ADMIN_PASSWORD = os.getenv('ADMIN_PASSWORD', '')
@@ -59,7 +59,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'oh_connection.apps.OhConnectionConfig',
+    'main.apps.Main',
+    'open_humans.apps.OpenHumansConfig',
     'project_admin.apps.ProjectAdminConfig',
 ]
 
@@ -87,7 +88,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'oh_connection.context_processors.read_config'
+                'main.context_processors.read_config'
             ],
         },
     },
