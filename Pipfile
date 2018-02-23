@@ -19,7 +19,7 @@ env-tools = "*"
 gunicorn = "*"
 idna = "*"
 Markdown = "*"
-open-humans-api = {ref = "*", git = "https://github.com/madprime/open-humans-api.git", editable = true}
+open-humans-api = "*"
 "psycopg2" = "*"
 pytz = "*"
 requests = "*"
