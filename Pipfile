@@ -11,20 +11,20 @@ name = "pypi"
 
 [packages]
 
-arrow = "==0.12.1"
-chardet = "==3.0.4"
-dj-database-url = "==0.4.2"
-Django = "==2.0.1"
-env-tools = "==2.1.0"
-gunicorn = "==19.7.1"
-idna = "==2.6"
-Markdown = "==2.6.11"
-open-humans-api = {ref = "1d5b667e4c69895d649da7118704a96f1d5d0839", git = "https://github.com/madprime/open-humans-api.git", editable = true}
-"psycopg2" = "==2.7.3.2"
-pytz = "==2017.3"
-requests = "==2.18.4"
-"urllib3" = "==1.22"
-whitenoise = "==3.3.1"
+arrow = "*"
+chardet = "*"
+dj-database-url = "*"
+Django = "*"
+env-tools = "*"
+gunicorn = "*"
+idna = "*"
+Markdown = "*"
+open-humans-api = "*"
+"psycopg2" = "*"
+pytz = "*"
+requests = "*"
+"urllib3" = "*"
+whitenoise = "*"
 
 
 [requires]
