@@ -124,9 +124,12 @@ def index(request):
     Starting page for app.
     """
     proj_config = ProjectConfiguration.objects.get(id=1)
-    auth_url = ohapi.api.oauth2_auth_url(
-        client_id=proj_config.oh_client_id,
-        redirect_uri=OH_OAUTH2_REDIRECT_URI)
+    if proj_config.oh_client_id:
+        auth_url = ohapi.api.oauth2_auth_url(
+            client_id=proj_config.oh_client_id,
+            redirect_uri=OH_OAUTH2_REDIRECT_URI)
+    else:
+        auth_url = 'http://www.example.com'
     context = {'auth_url': auth_url,
                'index_page': "".join(proj_config.homepage_text)}
     if request.user.is_authenticated and request.user.username != 'admin':
