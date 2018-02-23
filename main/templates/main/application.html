@@ -91,6 +91,11 @@ body {
                     <a href="{% url 'about' %}">About</a>
                   </li>
                   {% if request.user.is_authenticated %}
+                    {% if not is_admin %}
+                    <li {% if section == 'list' %} class="active" {%endif%}>
+                      <a href="{% url 'list' %}">File List</a>
+                    </li>
+                    {% endif %}
                   <li>
                     <form action="{% url 'logout' %}" method="post">{% csrf_token %}<input type="submit" value="Log out" style="margin-top:6px;" class="btn btn-default"></form>
                   </li>
