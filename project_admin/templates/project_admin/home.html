@@ -1,6 +1,15 @@
 {% extends 'main/application.html' %}
 
 {% block content %}
+{% if messages %}
+
+    {% for message in messages %}
+    <div class="alert alert-info" role="alert">
+    {{ message }}
+    </div>
+    {% endfor %}
+
+{% endif %}
 {% load utilities %}
 
 <h1>Current Project Configuration</h1>

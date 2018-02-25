@@ -8,6 +8,8 @@ except ImportError:
 from django.conf import settings
 from django.contrib.auth import login, logout
 from django.shortcuts import redirect, render
+from django.contrib import messages
+
 import ohapi
 import requests
 
@@ -155,9 +157,19 @@ def index(request):
             client_id=proj_config.oh_client_id,
             redirect_uri=OH_OAUTH2_REDIRECT_URI)
     else:
-        return redirect('project-admin/login')
+        if request.user.is_authenticated:
+            messages.info(request, "Please set up the app.")
+            return redirect('project-admin/')
+        else:
+            messages.info(request, "Please login to set up the app.")
+            return redirect('project-admin/login')
     if not proj_config.file_description or not proj_config.oh_client_secret or not proj_config.file_tags:
-        return redirect('project-admin/login')
+        if request.user.is_authenticated:
+            messages.info(request, "Please set up the app.")
+            return redirect('project-admin/')
+        else:
+            messages.info(request, "Please login to set up the app.")
+            return redirect('project-admin/login')
     context = {'auth_url': auth_url,
                'index_page': "".join(proj_config.homepage_text)}
     if request.user.is_authenticated and request.user.username != 'admin':
