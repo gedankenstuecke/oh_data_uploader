@@ -20,8 +20,12 @@ directory of the `oh_data_uploader` and running pip:
 
 ```
 cd oh_data_uploader/
-pip install -r requirements.txt
 ```
+Install `pipenv` using `pip install pipenv`
+
+Install all packages using `pipenv install`
+
+To activate this project's `virtualenv` use `pipenv shell`
 
 ### *Step 2: Install Heroku Command Line Interface (CLI)*
 
