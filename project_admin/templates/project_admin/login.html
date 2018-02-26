@@ -21,8 +21,10 @@
 
 <form action="{% url 'project-admin:login' %}" method="post">
   {% csrf_token %}
-  Admin password: <input type="password" name="password">
-  <input type="submit" value="Log in">
+  <div class="form-group">
+  Admin password: <input type="password" class="form-control" name="password">
+  </div>
+  <input type="submit" value="Log in" class="btn btn-default">
 </form>
 
 {% endblock %}
