@@ -78,11 +78,11 @@ def delete_file(request, file_id):
     """
     if request.user.is_authenticated and request.user.username != 'admin':
         oh_member = request.user.openhumansmember
-        requests.post(
-            OH_DELETE_FILES,
-            params={'access_token': oh_member.get_access_token()},
-            data={'project_member_id': oh_member.oh_id,
-                  'file_id': file_id})
+        client_info = ProjectConfiguration.objects.get(id=1).client_info
+        ohapi.api.delete_files(
+            project_member_id=oh_member.oh_id,
+            access_token=oh_member.get_access_token(**client_info),
+            file_id=file_id)
         return redirect('list')
     return redirect('index')
 
@@ -91,11 +91,11 @@ def delete_all_oh_files(oh_member):
     """
     Delete all current project files in Open Humans for this project member.
     """
-    requests.post(
-        OH_DELETE_FILES,
-        params={'access_token': oh_member.get_access_token()},
-        data={'project_member_id': oh_member.oh_id,
-              'all_files': True})
+    client_info = ProjectConfiguration.objects.get(id=1).client_info
+    ohapi.api.delete_files(
+        project_member_id=oh_member.oh_id,
+        access_token=oh_member.get_access_token(**client_info),
+        all_files=True)
 
 
 def upload_file_to_oh(oh_member, filehandle, metadata):
@@ -247,11 +247,11 @@ def about(request):
                   context=context)
 
 
-def list(request):
+def list_files(request):
     if request.user.is_authenticated and request.user.username != 'admin':
         oh_member = request.user.openhumansmember
-        data = oh_get_member_data(oh_member.get_access_token())
+        data = ohapi.api.exchange_oauth2_member(oh_member.get_access_token())
         context = {'files': data['data']}
-        return render(request, 'oh_connection/list.html',
+        return render(request, 'main/list.html',
                       context=context)
     return redirect('index')
