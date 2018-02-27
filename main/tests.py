@@ -27,5 +27,4 @@ class LoginTestCase(TestCase):
         c = Client()
         c.login(username=self.user.username, password='foobar')
         response = c.get("/")
-        print(response.content)
         self.assertRedirects(response, '/overview')
