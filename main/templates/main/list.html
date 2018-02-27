@@ -1,0 +1,43 @@
+{% extends 'main/application.html' %}
+
+{% block content %}
+
+    <h1>File List</h1>
+    <p class="lead">This is a list of files you have uploaded to OpenHumans using this project.</p>
+
+    {% if files|length %}
+    <table class="table table-striped" >
+        <thead>
+            <tr>
+                <th style="width: 10%;">Name</th>
+                <th style="width: 40%;">Description</th>
+                <th style="width: 40%;">Tags</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for file in files %}
+        <tr>
+            <td>{{ file.basename }}</td>
+            <td>{{ file.metadata.description }}</td>
+            <td>
+                {% for tag in file.metadata.tags %}
+                <span class="badge">{{ tag }}</span>
+                {% endfor %}
+            </td>
+            <td>
+                <a href="{{ file.download_url }}" class="btn btn-secondary btn-sm text-success" target="_blank">Download</a>
+            </td>
+            <td>
+                <a href="{% url 'delete' file_id=file.id %}" class="btn btn-secondary btn-sm text-danger">Delete</a>
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div class="text-center">
+        <p class="lead">No files uploaded</p>
+    </div>
+    {% endif %}
+
+{% endblock %}
