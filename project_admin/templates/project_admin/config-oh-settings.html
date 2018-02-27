@@ -6,10 +6,10 @@
 <form action="{% url 'project-admin:config-oh-settings' %}" method="post">
   {% csrf_token %}
   <div class="form-group">
-    <label>Client ID</label> <input class="form-control" name="client_id" size=60 type="text" value="{{config.oh_client_id}}" placeholder="Enter your Open Humans Client-ID">
+    <label>Client ID</label> <input class="form-control" name="client_id" size=60 type="text" value="{{config.oh_client_id}}" placeholder="Enter your Open Humans Client-ID" required>
   </div>
   <div class="form-group">
-    <label>Client secret</label> <input class="form-control" name="client_secret" type="text" size=60 value="{{config.oh_client_secret}}" placeholder="Enter your Open Humans Client-Secret">
+    <label>Client secret</label> <input class="form-control" name="client_secret" type="text" size=60 value="{{config.oh_client_secret}}" placeholder="Enter your Open Humans Client-Secret" required>
   </div>
   <div class="form-group">
     <label>Activity page URL</label> <input class="form-control" name="activity_page" type="text" size=60 value="{{config.oh_activity_page}}" placeholder="Enter the Open Humans Activity Page URL">

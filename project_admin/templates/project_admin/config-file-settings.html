@@ -7,11 +7,11 @@
   {% csrf_token %}
   <div class="form-group">
     <label>File description</label>
-    <input class="form-control" name="file_description" size=60 type="text" value="{{config.file_description}}" placeholder="A description of this file">
+    <input class="form-control" name="file_description" size=60 type="text" value="{{config.file_description}}" placeholder="A description of this file" required>
   </div>
   <div class="form-group">
     <label>File tags (comma separated)</label>
-    <input class="form-control" name="file_tags" type="text" size=60 value="{{tags}}" placeholder="comma, separated, list, of, tags">
+    <input class="form-control" name="file_tags" type="text" size=60 value="{{tags}}" placeholder="comma, separated, list, of, tags" required>
     <p class="help-block">Tags are a good way to describe the files you are uploading</p>
   </div>
   <input type="submit" class="btn btn-default" value="Save updates">
