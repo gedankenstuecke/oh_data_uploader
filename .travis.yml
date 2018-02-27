@@ -8,5 +8,4 @@ install:
   - pipenv install
 
 script:
-  - pipenv shell
   - python manage.py test
