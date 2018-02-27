@@ -1,4 +1,7 @@
 # Open Humans Uploader
+
+[![travis](https://travis-ci.org/gedankenstuecke/oh_data_uploader.svg?branch=master)](https://travis-ci.org/gedankenstuecke/oh_data_uploader)
+
 > it's like *Jekyll* for *Open Humans* projects
 
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
