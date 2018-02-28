@@ -8,6 +8,8 @@ except ImportError:
 from django.conf import settings
 from django.contrib.auth import login, logout
 from django.shortcuts import redirect, render
+from django.contrib import messages
+
 import ohapi
 import requests
 
@@ -156,6 +158,11 @@ def index(request):
             redirect_uri=OH_OAUTH2_REDIRECT_URI)
     else:
         auth_url = 'http://www.example.com'
+    if not proj_config.file_description or not proj_config.oh_client_secret or not proj_config.file_tags or not proj_config.oh_client_id:
+        if request.user.is_authenticated and request.user.username == 'admin':
+            messages.info(request, "Please set up the app.")
+        else:
+            messages.info(request, "Please login to set up the app.")
     context = {'auth_url': auth_url,
                'index_page': "".join(proj_config.homepage_text)}
     if request.user.is_authenticated and request.user.username != 'admin':
