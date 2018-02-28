@@ -38,6 +38,11 @@
             href="{{ auth_url }}">
               Get started / Login
           </a>
+          {% else %}
+          <a class="btn btn-primary btn-lg"
+            href="{% url 'project-admin:home' %}">
+              Setup your project
+          </a>
           {% endif %}
           <h2>FAQ</h2>
           <div class="panel panel-default">
