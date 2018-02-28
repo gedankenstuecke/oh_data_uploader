@@ -4,6 +4,7 @@ from django.conf import settings
 from open_humans.models import OpenHumansMember
 from main.views import upload_file_to_oh
 import requests_mock
+from unittest.mock import mock_open, patch
 
 OH_BASE_URL = settings.OPENHUMANS_OH_BASE_URL
 OH_API_BASE = OH_BASE_URL + '/api/direct-sharing'
@@ -61,7 +62,10 @@ class LoginTestCase(TestCase):
             m.register_uri('POST',
                            OH_DIRECT_UPLOAD_COMPLETE,
                            status_code=200)
-
-            upload_file_to_oh(self.oh_member,
-                              open("README.md"),
-                              {'tags': '["foo"]'})
+            with patch('builtins.open',
+                       mock_open(read_data='foobar'),
+                       create=True):
+                fake_file = open('foo')
+                upload_file_to_oh(self.oh_member,
+                                  fake_file,
+                                  {'tags': '["foo"]'})
