@@ -25,6 +25,7 @@ pytz = "*"
 requests = "*"
 "urllib3" = "*"
 whitenoise = "*"
+requests-mock = "*"
 
 
 [requires]
