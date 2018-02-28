@@ -32,10 +32,12 @@
               Open Humans</a>.
             </li>
           </ol>
+          {% if not messages %}
           <a class="btn btn-primary btn-lg"
             href="{{ auth_url }}">
               Get started / Login
           </a>
+          {% endif %}
           <h2>FAQ</h2>
           <div class="panel panel-default">
             <div class="panel-heading">

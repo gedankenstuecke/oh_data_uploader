@@ -157,19 +157,12 @@ def index(request):
             client_id=proj_config.oh_client_id,
             redirect_uri=OH_OAUTH2_REDIRECT_URI)
     else:
-        if request.user.is_authenticated:
+        auth_url = 'http://www.example.com'
+    if not proj_config.file_description or not proj_config.oh_client_secret or not proj_config.file_tags or not proj_config.oh_client_id:
+        if request.user.is_authenticated and request.user.username == 'admin':
             messages.info(request, "Please set up the app.")
-            return redirect('project-admin/')
         else:
             messages.info(request, "Please login to set up the app.")
-            return redirect('project-admin/login')
-    if not proj_config.file_description or not proj_config.oh_client_secret or not proj_config.file_tags:
-        if request.user.is_authenticated:
-            messages.info(request, "Please set up the app.")
-            return redirect('project-admin/')
-        else:
-            messages.info(request, "Please login to set up the app.")
-            return redirect('project-admin/login')
     context = {'auth_url': auth_url,
                'index_page': "".join(proj_config.homepage_text)}
     if request.user.is_authenticated and request.user.username != 'admin':
