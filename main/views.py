@@ -9,6 +9,7 @@ from django.conf import settings
 from django.contrib.auth import login, logout
 from django.shortcuts import redirect, render
 from django.contrib import messages
+from django.utils.safestring import mark_safe
 
 import ohapi
 import requests
@@ -159,10 +160,8 @@ def index(request):
     else:
         auth_url = 'http://www.example.com'
     if not proj_config.file_description or not proj_config.oh_client_secret or not proj_config.file_tags or not proj_config.oh_client_id:
-        if request.user.is_authenticated and request.user.username == 'admin':
-            messages.info(request, "Please set up the app.")
-        else:
-            messages.info(request, "Please login to set up the app.")
+        messages.info(request,
+                      mark_safe("<b><a href='/project-admin'>Click here to set up the app.</a></b>"))
     context = {'auth_url': auth_url,
                'index_page': "".join(proj_config.homepage_text)}
     if request.user.is_authenticated and request.user.username != 'admin':
