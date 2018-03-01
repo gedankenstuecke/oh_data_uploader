@@ -105,7 +105,8 @@ def config_file_settings(request):
         project_config.save()
         return redirect('project-admin:home')
 
-    tags = ','.join(json.loads(project_config.file_tags)) if project_config.file_tags else ''
+    tags = ','.join(json.loads(project_config.file_tags)
+                    ) if project_config.file_tags else ''
     context = {"tags": tags}
     return render(request, 'project_admin/config-file-settings.html',
                   context=context)

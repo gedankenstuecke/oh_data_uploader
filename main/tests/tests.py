@@ -14,7 +14,14 @@ OH_OAUTH2_REDIRECT_URI = '{}/complete'.format(settings.OPENHUMANS_APP_BASE_URL)
 
 
 class LoginTestCase(TestCase):
+    """
+    Tests for index page and upload feature
+    """
+
     def setUp(self):
+        """
+        Set up the app for following tests
+        """
         settings.DEBUG = True
         call_command('init_proj_config')
         self.factory = RequestFactory()
@@ -28,24 +35,33 @@ class LoginTestCase(TestCase):
         self.user.save()
 
     def test_index_logged_out(self):
+        """
+        Test index page when logged out
+        """
         c = Client()
         response = c.get("/")
         self.assertEqual(response.status_code, 200)
 
     def test_index_logged_in(self):
+        """
+        Test if redirection happens when user logs in.
+        """
         c = Client()
         c.login(username=self.user.username, password='foobar')
         response = c.get("/")
         self.assertRedirects(response, '/overview')
 
     def test_upload_function(self):
+        """
+        Tests upload feature
+        """
         with requests_mock.Mocker() as m:
             # API-upload-URL
             upload_url = '{}?access_token={}'.format(
                 OH_DIRECT_UPLOAD, self.oh_member.access_token)
             # mock delete-API call
             m.register_uri('POST',
-                           OH_API_BASE+"/project/files/delete/",
+                           OH_API_BASE + "/project/files/delete/",
                            status_code=200)
             # mock request 1 to initiate upload, get AWS link
             m.register_uri('POST',
