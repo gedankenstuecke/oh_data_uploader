@@ -14,24 +14,19 @@ class Migration(migrations.Migration):
             model_name='projectconfiguration',
             name='file_description',
             field=models.TextField(
-                blank=True,
-                help_text='Description of the type of data being uploaded.'),
+                blank=True, help_text='Description of the type of data being uploaded.'),
         ),
         migrations.AlterField(
             model_name='projectconfiguration',
             name='file_tags',
             field=models.TextField(
-                blank=True,
-                help_text='List of tags that describe'
-                'file uploads, stored as a JSON-formatted array'),
+                blank=True, help_text='List of tags that describe file uploads, stored as a JSON-formatted array'),
         ),
         migrations.AlterField(
             model_name='projectconfiguration',
             name='oh_activity_page',
             field=models.TextField(
-                blank=True,
-                help_text='The URL where we can'
-                'find your project in Open Humans.'),
+                blank=True, help_text='The URL where we can find your project in Open Humans.'),
         ),
         migrations.AlterField(
             model_name='projectconfiguration',
@@ -47,8 +42,7 @@ class Migration(migrations.Migration):
             model_name='projectconfiguration',
             name='project_description',
             field=models.TextField(
-                blank=True,
-                help_text='Project description, displayed on the front page.'),
+                blank=True, help_text='Project description, displayed on the front page.'),
         ),
         migrations.AlterField(
             model_name='projectconfiguration',
