@@ -37,7 +37,7 @@ Log in into your existing *heroku* account or create a new one. (This Uploader i
 
 *heroku* asks you to give your app a name, for this demo we use `ohuploadertemplatetest`. Repeat this name below for the `HEROKUCONFIG_APP_NAME`. The second important parameter is the `ADMIN_PASSWORD`. You will later need this to connect your uploader to *Open Humans* and to customize your uploader. Once you have entered this information you click on *deploy app* and after a while you should get a success message.
 
-Now your uploader should be available at `https://ohuploadertemplatetest.herokuapp.com/`.
+If you have given `ohuploadertemplatetest` as the `HEROKUCONFIG_APP_NAME` your uploader should be available at `https://ohuploadertemplatetest.herokuapp.com/`.
 
 ### **Step 3**: Create your project on *Open Humans*
 
@@ -59,7 +59,7 @@ Click on the name of your new project and this new page you will see your `CLIEN
 
 ### **Step 5**: Finalize your Uploader setup
 
-You can now go to `https://ohuploadertemplatetest.herokuapp.com/project-admin/login` and use the `ADMIN_PASSWORD` you gave in *Step 2* to log in.
+You can now go to `https://HEROKUCONFIG_APP_NAME.herokuapp.com/project-admin/login` (replace `HEROKUCONFIG_APP_NAME` with the name you gave in *Step 2*) and use the `ADMIN_PASSWORD` you gave in *Step 2* to log in.
 
 ![](docs/template_setup.png)
 
