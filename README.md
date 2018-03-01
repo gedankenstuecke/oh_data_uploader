@@ -1,7 +1,8 @@
 # Open Humans Uploader
 
 [![travis](https://travis-ci.org/gedankenstuecke/oh_data_uploader.svg?branch=master)](https://travis-ci.org/gedankenstuecke/oh_data_uploader)
-
+<a href="https://codeclimate.com/github/gedankenstuecke/oh_data_uploader/maintainability"><img src="https://api.codeclimate.com/v1/badges/0e3dce4fd4af6e5fc555/maintainability" /></a>
+<a href="https://codeclimate.com/github/gedankenstuecke/oh_data_uploader/test_coverage"><img src="https://api.codeclimate.com/v1/badges/0e3dce4fd4af6e5fc555/test_coverage" /></a>
 > it's like *Jekyll* for *Open Humans* projects
 
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
