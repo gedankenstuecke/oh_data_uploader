@@ -18,4 +18,5 @@ script:
   - coverage run --source="." manage.py test
 
 after_success:
+  - coverage xml
   - bin/cc-test-reporter after-build -t coverage.py
