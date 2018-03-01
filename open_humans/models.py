@@ -23,12 +23,12 @@ def make_unique_username(base):
         User.objects.get(username=base)
     except User.DoesNotExist:
         return base
-    n = 2
+    counter = 2
     while True:
-        name = base + str(n)
+        name = base + str(counter)
         try:
             User.objects.get(username=name)
-            n += 1
+            counter += 1
         except User.DoesNotExist:
             return name
 

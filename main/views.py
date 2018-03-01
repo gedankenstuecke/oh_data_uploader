@@ -159,9 +159,15 @@ def index(request):
             redirect_uri=OH_OAUTH2_REDIRECT_URI)
     else:
         auth_url = 'http://www.example.com'
-    if not proj_config.file_description or not proj_config.oh_client_secret or not proj_config.file_tags or not proj_config.oh_client_id:
+    if not proj_config.file_description or \
+       not proj_config.oh_client_secret or \
+       not proj_config.file_tags or not proj_config.oh_client_id:
         messages.info(request,
-                      mark_safe("<b><a href='/project-admin'>Click here to set up the app.</a></b>"))
+                      mark_safe(
+                          "<b><a href='/project-admin'>"
+                          "Click here to set up the app."
+                          "</a></b>"
+                      ))
     context = {'auth_url': auth_url,
                'index_page': "".join(proj_config.homepage_text)}
     if request.user.is_authenticated and request.user.username != 'admin':
@@ -230,6 +236,9 @@ def complete(request):
 
 
 def logout_user(request):
+    """
+    Logout user
+    """
     if request.method == 'POST':
         logout(request)
     return redirect('index')
@@ -246,6 +255,9 @@ def upload_old(request):
 
 
 def about(request):
+    """
+    Render about page
+    """
     proj_config = ProjectConfiguration.objects.get(id=1)
     context = {'about': proj_config.about,
                'faq': proj_config.faq}
