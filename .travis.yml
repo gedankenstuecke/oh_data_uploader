@@ -5,7 +5,18 @@ python:
 
 install:
   - pip install pipenv
-  - pipenv install
+  - pipenv install --dev
+
+before_script:
+  - mkdir bin
+  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > bin/cc-test-reporter
+  - chmod +x bin/cc-test-reporter
+  - bin/cc-test-reporter before-build
 
 script:
   - python manage.py test
+  - coverage run --source="." manage.py test
+
+after_success:
+  - coverage xml
+  - bin/cc-test-reporter after-build -t coverage.py
