@@ -50,14 +50,6 @@ class IndexPageTestCase(TestCase):
         settings.DEBUG = True
         call_command('init_proj_config')
 
-    def test_index_page(self):
-        """
-        Makes request to the index page.
-        """
-        c = Client()
-        response = c.get('/')
-        self.assertEqual(response.status_code, 200)
-
     def test_index_page_content(self):
         """
         Test whether content is rendered properly.
