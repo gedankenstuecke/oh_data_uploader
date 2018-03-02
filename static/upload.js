@@ -26,13 +26,13 @@ function startUpload() {
     var xhr = new XMLHttpRequest();
     xhr.open('POST', "https://www.openhumans.org/api/direct-sharing/project/files/upload/direct/?access_token="+access_token, true);
     xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    xhr.send('project_member_id='+member_id+'&filename='+file['name']+'&metadata='+metadata);
+    xhr.send('project_member_id='+member_id+'&filename='+file.name+'&metadata='+metadata);
     xhr.onreadystatechange = putFile;
     function putFile(e) {
       if (xhr.readyState === 4 && xhr.status === 201) {
         var response = JSON.parse(xhr.responseText);
         var put_xhr = new XMLHttpRequest();
-        put_xhr.open('PUT', response['url'], true);
+        put_xhr.open('PUT', response.url, true);
         put_xhr.setRequestHeader('Content-type','');
         put_xhr.send(file);
         put_xhr.onreadystatechange = uploadedFile;
@@ -41,7 +41,7 @@ function startUpload() {
             var finish_xhr = new XMLHttpRequest();
             finish_xhr.open('POST', "https://www.openhumans.org/api/direct-sharing/project/files/upload/complete/?access_token="+access_token, true);
             finish_xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-            finish_xhr.send('project_member_id='+member_id+'&file_id='+response['id']);
+            finish_xhr.send('project_member_id='+member_id+'&file_id='+response.id);
             finish_xhr.onreadystatechange = finishedFile;
             function finishedFile(e) {
               if (finish_xhr.readyState === 4 && finish_xhr.status === 200) {

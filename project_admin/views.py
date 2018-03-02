@@ -1,7 +1,6 @@
 from django.conf import settings
 from django.contrib.auth import get_user_model, login
 from django.shortcuts import redirect, render
-from django.core.serializers import serialize
 
 from .models import ProjectConfiguration, FileMetaData
 import json
@@ -104,8 +103,10 @@ def config_file_settings(request):
     if request.method == 'POST':
         for file in files:
             file.name = request.POST["file_{}_name".format(file.id)]
-            file.description = request.POST["file_{}_description".format(file.id)]
-            file.tags = json.dumps(request.POST["file_{}_tags".format(file.id)].split(","))
+            file.description = request.POST["file_{}_description"
+                                            .format(file.id)]
+            file.tags = json.dumps(request.POST["file_{}_tags"
+                                   .format(file.id)].split(","))
             file.save()
         return redirect('project-admin:home')
 
@@ -135,11 +136,13 @@ def config_homepage_text(request):
 
     return render(request, 'project_admin/config-homepage-text.html')
 
+
 def add_file(request):
     file = FileMetaData.objects.create()
     file.name = "File {}".format(file.id)
     file.save()
     return redirect('project-admin:config-file-settings')
+
 
 def delete_file(request, file_id):
     file = FileMetaData.objects.get(id=file_id)

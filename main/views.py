@@ -256,7 +256,8 @@ def upload_old(request):
     for file in files:
         file.tags = ','.join(json.loads(file.tags)) if file.tags else ''
     if request.user.is_authenticated:
-        context = {'upload_description': proj_config.upload_description, 'files': files}
+        context = {'upload_description': proj_config.upload_description,
+                   'files': files}
         return render(request, 'main/upload_old.html',
                       context=context)
     return redirect('index')
