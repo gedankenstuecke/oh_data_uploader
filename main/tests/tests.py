@@ -13,6 +13,7 @@ OH_DIRECT_UPLOAD_COMPLETE = OH_API_BASE + '/project/files/upload/complete/'
 OH_OAUTH2_REDIRECT_URI = '{}/complete'.format(settings.OPENHUMANS_APP_BASE_URL)
 OH_GET_URL = OH_API_BASE + '/project/exchange-member/'
 
+
 class LoginTestCase(TestCase):
     """
     Tests for index page and upload feature
@@ -94,18 +95,19 @@ class LoginTestCase(TestCase):
             get_url = '{}?access_token={}'.format(
                 OH_GET_URL, self.oh_member.access_token)
             m.register_uri('GET',
-                   get_url,
-                   json = { 'data':[{
-                   'id':'1',
-                   'basename':'foo',
-                   'download_url':'www.foobar.com',
-                   'metadata':{
-                                   'description':'',
-                                   'tags':'["foo"]',
-                              },
-                            },]
-                    },
-                   status_code=200)
+                           get_url,
+                           json={
+                                  'data': [{
+                                             'id': '1',
+                                             'basename': 'foo',
+                                             'download_url': 'www.foobar.com',
+                                             'metadata': {
+                                                             'description': '',
+                                                             'tags': '["foo"]',
+                                                         },
+                                           }, ]
+                                },
+                           status_code=200)
             c = Client()
             c.login(username=self.user.username, password='foobar')
             data = c.get("/list")
