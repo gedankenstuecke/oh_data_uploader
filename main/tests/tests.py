@@ -11,6 +11,7 @@ OH_API_BASE = OH_BASE_URL + '/api/direct-sharing'
 OH_DIRECT_UPLOAD = OH_API_BASE + '/project/files/upload/direct/'
 OH_DIRECT_UPLOAD_COMPLETE = OH_API_BASE + '/project/files/upload/complete/'
 OH_OAUTH2_REDIRECT_URI = '{}/complete'.format(settings.OPENHUMANS_APP_BASE_URL)
+OH_GET_URL = OH_API_BASE + '/project/exchange-member/'
 
 
 class LoginTestCase(TestCase):
@@ -85,3 +86,29 @@ class LoginTestCase(TestCase):
                 upload_file_to_oh(self.oh_member,
                                   fake_file,
                                   {'tags': '["foo"]'})
+
+    def test_list_files(self):
+        """
+        Test the list_files function.
+        """
+        with requests_mock.Mocker() as m:
+            get_url = '{}?access_token={}'.format(
+                OH_GET_URL, self.oh_member.access_token)
+            m.register_uri('GET',
+                           get_url,
+                           json={'data': [
+                            {'id': '1',
+                             'basename': 'foo',
+                             'download_url': 'www.foobar.com',
+                             'metadata': {
+                                          'description': '',
+                                          'tags': '["foo"]',
+                                          },
+                             }]
+                           },
+                           status_code=200)
+            c = Client()
+            c.login(username=self.user.username, password='foobar')
+            data = c.get("/list")
+            self.assertEqual(data.status_code, 200)
+            self.assertIn('<a href="www.foobar.com"', str(data.content))
