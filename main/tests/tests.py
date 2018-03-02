@@ -96,17 +96,16 @@ class LoginTestCase(TestCase):
                 OH_GET_URL, self.oh_member.access_token)
             m.register_uri('GET',
                            get_url,
-                           json={
-                                  'data': [{
-                                             'id': '1',
-                                             'basename': 'foo',
-                                             'download_url': 'www.foobar.com',
-                                             'metadata': {
-                                                             'description': '',
-                                                             'tags': '["foo"]',
-                                                         },
-                                           }, ]
-                                },
+                           json={'data': [
+                            {'id': '1',
+                             'basename': 'foo',
+                             'download_url': 'www.foobar.com',
+                             'metadata': {
+                                          'description': '',
+                                          'tags': '["foo"]',
+                                          },
+                             }]
+                           },
                            status_code=200)
             c = Client()
             c.login(username=self.user.username, password='foobar')
