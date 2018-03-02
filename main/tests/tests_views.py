@@ -37,6 +37,7 @@ class AboutPageTestCase(TestCase):
             content += str(content_file[i])
         self.assertIn(markdown.markdown(content).encode(), response.content)
 
+
 class IndexPageTestCase(TestCase):
     """
     Test cases for the index page.
