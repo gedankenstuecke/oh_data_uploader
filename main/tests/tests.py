@@ -111,5 +111,4 @@ class LoginTestCase(TestCase):
             c.login(username=self.user.username, password='foobar')
             data = c.get("/list")
             self.assertEqual(data.status_code, 200)
-            self.assertIn('<a href="www.foobar.com"',str(data.content))
-
+            self.assertIn('<a href="www.foobar.com"', str(data.content))
