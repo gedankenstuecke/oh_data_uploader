@@ -112,3 +112,11 @@ class LoginTestCase(TestCase):
             data = c.get("/list")
             self.assertEqual(data.status_code, 200)
             self.assertIn('<a href="www.foobar.com"', str(data.content))
+
+    def test_list_files_logged_out(self):
+        """
+        Test the list_files function when logged out.
+        """
+        c = Client()
+        response = c.get("/list")
+        self.assertRedirects(response, '/')
