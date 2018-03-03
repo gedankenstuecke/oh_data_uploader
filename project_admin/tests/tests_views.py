@@ -21,7 +21,7 @@ class User_Views_Test(TestCase):
     def test_project_config_page_returns_correct_html(self):
         c = Client()
         response = c.post("/project-admin/login", 
-        {'user': 'admin', 'password': '123'}, follow=True)
+                           {'user': 'admin', 'password': '123'}, follow=True)
         self.assertContains(response, '<h1>Current Project Configuration</h1>', 
-        status_code=200)
+                             status_code=200)
         self.assertTemplateUsed(response, 'project_admin/home.html')
