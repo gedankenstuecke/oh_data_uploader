@@ -127,3 +127,45 @@ class AdminLoginTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response,
                                 'project_admin/config-file-settings.html')
+
+    def test_config_oh_settings_logged_out(self):
+        """
+        Test config_oh_settings function when logged out
+        """
+        c = Client()
+        response = c.get("/project-admin/config-oh-settings/")
+        self.assertEqual(response.status_code, 302)
+
+    def test_post_config_oh_settings(self):
+        """
+        Test making a post request to
+        config_oh_settings.
+        """
+        c = Client()
+        response = c.post("/project-admin/login/",
+                          {'password': 'test1234'},
+                          follow=True)
+        response = c.post("/project-admin/config-oh-settings/",
+                          {'client_id': 'foo',
+                           'client_secret': 'foobar',
+                           'activity_page': 'foo-bar'},
+                          follow=True)
+        self.assertEqual(response.context['config'].oh_client_id, 'foo')
+        self.assertEqual(response.context['config'].oh_client_secret,
+                         'foobar')
+        self.assertEqual(response.context['config'].oh_activity_page,
+                         'foo-bar')
+
+    def test_get_config_oh_settings(self):
+        """
+        Test making a get request to
+        config_oh_settings.
+        """
+        c = Client()
+        response = c.post("/project-admin/login/",
+                          {'password': 'test1234'},
+                          follow=True)
+        response = c.get("/project-admin/config-oh-settings/")
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response,
+                                'project_admin/config-oh-settings.html')
