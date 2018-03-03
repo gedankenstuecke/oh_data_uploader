@@ -169,3 +169,48 @@ class AdminLoginTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response,
                                 'project_admin/config-oh-settings.html')
+
+    def test_config_general_settings_logged_out(self):
+        """
+        Test config_general_settings function when logged out
+        """
+        c = Client()
+        response = c.get("/project-admin/config-general-settings/")
+        self.assertEqual(response.status_code, 302)
+
+    def test_post_config_general_settings(self):
+        """
+        Test making a post request to
+        config_general_settings.
+        """
+        c = Client()
+        response = c.post("/project-admin/login/",
+                          {'password': 'test1234'},
+                          follow=True)
+        response = c.post("/project-admin/config-general-settings/",
+                          {'project_title': 'foo',
+                           'project_description': 'foobar',
+                           'more_info_url': 'www.foo-bar.com',
+                           'logo_url': 'www.foobar.com'},
+                          follow=True)
+        self.assertEqual(response.context['config'].project_title, 'foo')
+        self.assertEqual(response.context['config'].project_description,
+                         'foobar')
+        self.assertEqual(response.context['config'].more_info_url,
+                         'www.foo-bar.com')
+        self.assertEqual(response.context['config'].logo_url,
+                         'www.foobar.com')
+
+    def test_get_config_general_settings(self):
+        """
+        Test making a get request to
+        config_general_settings.
+        """
+        c = Client()
+        response = c.post("/project-admin/login/",
+                          {'password': 'test1234'},
+                          follow=True)
+        response = c.get("/project-admin/config-general-settings/")
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response,
+                                'project_admin/config-general-settings.html')
