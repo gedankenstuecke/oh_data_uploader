@@ -62,9 +62,9 @@ class AdminLoginTestCase(TestCase):
                           {'password': 'test1234'},
                           follow=True)
         response = c.get("/project-admin/config-homepage-text/")
-        self.assertIn('<i>Github</i> has a <a href="https://guides'
-                      '.github.com/features/mastering-markdown/#syntax">',
-                      str(response.content))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response,
+                                'project_admin/config-homepage-text.html')
 
     def test_post_config_homepage_text(self):
         """
@@ -88,3 +88,42 @@ class AdminLoginTestCase(TestCase):
         self.assertEqual(response.context['config'].homepage_text, 'foobar!')
         self.assertEqual(response.context['config'].upload_description,
                          'foo_bar')
+
+    def test_config_file_settings_logged_out(self):
+        """
+        Test config_file_settings function when logged out
+        """
+        c = Client()
+        response = c.get("/project-admin/config-file-settings/")
+        self.assertEqual(response.status_code, 302)
+
+    def test_post_config_file_settings(self):
+        """
+        Test making a post request to
+        config_file_settings.
+        """
+        c = Client()
+        response = c.post("/project-admin/login/",
+                          {'password': 'test1234'},
+                          follow=True)
+        response = c.post("/project-admin/config-file-settings/",
+                          {'file_description': 'foo',
+                           'file_tags': 'foo,bar', },
+                          follow=True)
+        self.assertEqual(response.context['config'].file_description, 'foo')
+        self.assertEqual(response.context['config'].file_tags,
+                         '["foo", "bar"]')
+
+    def test_get_config_file_settings(self):
+        """
+        Test making a get request to
+        config_file_settings.
+        """
+        c = Client()
+        response = c.post("/project-admin/login/",
+                          {'password': 'test1234'},
+                          follow=True)
+        response = c.get("/project-admin/config-file-settings/")
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response,
+                                'project_admin/config-file-settings.html')
