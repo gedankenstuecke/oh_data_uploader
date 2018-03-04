@@ -1,5 +1,6 @@
 from django.core.exceptions import ValidationError
 from django.db import models
+import json
 
 
 class ProjectConfiguration(models.Model):
@@ -62,3 +63,6 @@ class FileMetaData(models.Model):
         help_text='List of tags that describe file uploads, stored as a '
                   'JSON-formatted array',
         blank=True)
+
+    def get_tags(self):
+        return ','.join(json.loads(self.tags)) if self.tags else ''

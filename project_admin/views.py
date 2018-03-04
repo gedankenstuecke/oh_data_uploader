@@ -16,20 +16,10 @@ def home(request):
         project_config = ProjectConfiguration.objects.get(id=1)
         files = FileMetaData.objects.all()
         for file in files:
-            file.tags = ','.join(json.loads(file.tags)) if file.tags else ''
+            file.tags = file.get_tags()
         context = {'project_config': project_config, 'files': files}
         return render(request, 'project_admin/home.html', context=context)
-    else:
-        return redirect('project-admin:login')
-
-
-def config(request):
-    """
-    Edit project config.
-    """
-    project_config = ProjectConfiguration.objects.get(id=1)
-    context = {'project_config': project_config}
-    return render(request, 'project_admin/config.html', context=context)
+    return redirect('project-admin:login')
 
 
 def admin_login(request):
@@ -98,23 +88,15 @@ def config_file_settings(request):
     if request.user.username != 'admin':
         return redirect('project-admin:home')
 
-    files = FileMetaData.objects.all()
-
     if request.method == 'POST':
-        for file in files:
-            file.name = request.POST["file_{}_name".format(file.id)]
-            file.description = request.POST["file_{}_description"
-                                            .format(file.id)]
-            file.tags = json.dumps(request.POST["file_{}_tags"
-                                   .format(file.id)].split(","))
-            file.save()
+        update_file_metadata(request.POST)
         return redirect('project-admin:home')
 
+    files = FileMetaData.objects.all()
     for file in files:
-        file.tags = ','.join(json.loads(file.tags)) if file.tags else ''
-    context = {"files": files}
+        file.tags = file.get_tags()
     return render(request, 'project_admin/config-file-settings.html',
-                  context=context)
+                  context={"files": files})
 
 
 def config_homepage_text(request):
@@ -145,15 +127,7 @@ def add_file(request):
         return redirect('project-admin:home')
 
     if request.method == 'POST':
-        files = FileMetaData.objects.all()
-        for file in files:
-            file.name = request.POST["file_{}_name".format(file.id)]
-            file.description = request.POST["file_{}_description"
-                                            .format(file.id)]
-            file.tags = json.dumps(request.POST["file_{}_tags"
-                                   .format(file.id)].split(","))
-            file.save()
-
+        update_file_metadata(request.POST)
         file = FileMetaData.objects.create()
         file.name = "File {}".format(file.id)
         file.save()
@@ -169,16 +143,19 @@ def delete_file(request, file_id):
         return redirect('project-admin:home')
 
     if request.method == 'POST':
-        files = FileMetaData.objects.all()
-        for file in files:
-            file.name = request.POST["file_{}_name".format(file.id)]
-            file.description = request.POST["file_{}_description"
-                                            .format(file.id)]
-            file.tags = json.dumps(request.POST["file_{}_tags"
-                                   .format(file.id)].split(","))
-            file.save()
-
+        update_file_metadata(request.POST)
         file = FileMetaData.objects.get(id=file_id)
         file.delete()
 
     return redirect('project-admin:config-file-settings')
+
+
+def update_file_metadata(metadata):
+    files = FileMetaData.objects.all()
+    for file in files:
+        file.name = metadata["file_{}_name".format(file.id)]
+        file.description = metadata["file_{}_description"
+                                    .format(file.id)]
+        file.tags = json.dumps(metadata["file_{}_tags"
+                               .format(file.id)].split(","))
+        file.save()

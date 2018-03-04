@@ -179,7 +179,7 @@ def overview(request):
         files = FileMetaData.objects.all()
         files_js = serialize('json', files)
         for file in files:
-            file.tags = ','.join(json.loads(file.tags)) if file.tags else ''
+            file.tags = file.get_tags()
         context = {'oh_id': oh_member.oh_id,
                    'oh_member': oh_member,
                    'files': files,
@@ -218,7 +218,7 @@ def complete(request):
         files = FileMetaData.objects.all()
         files_js = serialize('json', files)
         for file in files:
-            file.tags = ','.join(json.loads(file.tags)) if file.tags else ''
+            file.tags = file.get_tags()
         context = {'oh_id': oh_member.oh_id,
                    'oh_member': oh_member,
                    'files': files,
@@ -254,7 +254,7 @@ def upload_old(request):
     proj_config = ProjectConfiguration.objects.get(id=1)
     files = FileMetaData.objects.all()
     for file in files:
-        file.tags = ','.join(json.loads(file.tags)) if file.tags else ''
+        file.tags = file.get_tags()
     if request.user.is_authenticated:
         context = {'upload_description': proj_config.upload_description,
                    'files': files}
