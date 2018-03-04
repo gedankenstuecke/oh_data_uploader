@@ -99,23 +99,6 @@ class AdminLoginTestCase(TestCase):
         self.assertRedirects(response, '/project-admin/',
                              status_code=302, target_status_code=302)
 
-    def test_post_config_file_settings(self):
-        """
-        Test making a post request to
-        config_file_settings.
-        """
-        c = Client()
-        response = c.post("/project-admin/login/",
-                          {'password': 'test1234'},
-                          follow=True)
-        response = c.post("/project-admin/config-file-settings/",
-                          {'file_description': 'foo',
-                           'file_tags': 'foo,bar', },
-                          follow=True)
-        self.assertEqual(response.context['config'].file_description, 'foo')
-        self.assertEqual(response.context['config'].file_tags,
-                         '["foo", "bar"]')
-
     def test_get_config_file_settings(self):
         """
         Test making a get request to
