@@ -50,7 +50,8 @@ class AdminLoginTestCase(TestCase):
         """
         c = Client()
         response = c.get("/project-admin/config-homepage-text/")
-        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, '/project-admin/',
+                             status_code=302, target_status_code=302)
 
     def test_get_config_homepage_text(self):
         """
@@ -95,7 +96,8 @@ class AdminLoginTestCase(TestCase):
         """
         c = Client()
         response = c.get("/project-admin/config-file-settings/")
-        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, '/project-admin/',
+                             status_code=302, target_status_code=302)
 
     def test_post_config_file_settings(self):
         """
@@ -134,7 +136,8 @@ class AdminLoginTestCase(TestCase):
         """
         c = Client()
         response = c.get("/project-admin/config-oh-settings/")
-        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, '/project-admin/',
+                             status_code=302, target_status_code=302)
 
     def test_post_config_oh_settings(self):
         """
@@ -176,7 +179,8 @@ class AdminLoginTestCase(TestCase):
         """
         c = Client()
         response = c.get("/project-admin/config-general-settings/")
-        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, '/project-admin/',
+                             status_code=302, target_status_code=302)
 
     def test_post_config_general_settings(self):
         """
