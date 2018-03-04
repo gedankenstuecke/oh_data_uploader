@@ -17,23 +17,23 @@
       {% for file in files %}
         <tr>
           <td>
-            <input class="form-control" name="{% concatenate "file" file.id "name" %}" size=60 type="text" value="{{file.name}}" placeholder="A representative name of this file">
+            <input class="form-control" name="{% concatenate "file" file.id "name" %}" size=60 type="text" value="{{file.name}}" placeholder="A representative name of this file" required>
           </td>
           <td>
-              <input class="form-control" name="{% concatenate "file" file.id "description" %}" size=60 type="text" value="{{file.description}}" placeholder="A description of this file">
+              <input class="form-control" name="{% concatenate "file" file.id "description" %}" size=60 type="text" value="{{file.description}}" placeholder="A description of this file" required>
           </td>
           <td>
-            <input class="form-control" name="{% concatenate "file" file.id "tags" %}" type="text" size=60 value="{{file.tags}}" placeholder="comma, separated, list, of, tags">
+            <input class="form-control" name="{% concatenate "file" file.id "tags" %}" type="text" size=60 value="{{file.tags}}" placeholder="comma, separated, list, of, tags" required>
           </td>
           <td>
-            <button class="btn btn-secondary btn-sm text-danger" formaction="{% url 'project-admin:delete-file' file.id %}">Delete</button>
+            <button class="btn btn-secondary btn-sm text-danger" formaction="{% url 'project-admin:delete-file' file.id %}" formnovalidate>Delete</button>
           </td>
         </tr>
       {% endfor %}
     </tbody>
   </table>
   <div class="row text-center">
-    <button class="btn btn-success" formaction="{% url 'project-admin:add-file' %}">Add File</button>
+    <button class="btn btn-success" formaction="{% url 'project-admin:add-file' %}" formnovalidate>Add File</button>
     <input type="submit" class="btn btn-primary align-right" value="Save updates">
   </div>
 </form>
