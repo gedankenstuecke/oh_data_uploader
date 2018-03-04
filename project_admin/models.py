@@ -52,7 +52,7 @@ class FileMetaData(models.Model):
     Store file metadata
     """
     name = models.TextField(
-        help_text='Name of the file (for representational purposes'
+        help_text='Name of the file (for representational purposes '
                   'in the project)'
     )
     description = models.TextField(
