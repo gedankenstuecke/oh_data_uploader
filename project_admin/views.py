@@ -138,13 +138,47 @@ def config_homepage_text(request):
 
 
 def add_file(request):
-    file = FileMetaData.objects.create()
-    file.name = "File {}".format(file.id)
-    file.save()
+    """
+    Add file metadata object
+    """
+    if request.user.username != 'admin':
+        return redirect('project-admin:home')
+
+    if request.method == 'POST':
+        files = FileMetaData.objects.all()
+        for file in files:
+            file.name = request.POST["file_{}_name".format(file.id)]
+            file.description = request.POST["file_{}_description"
+                                            .format(file.id)]
+            file.tags = json.dumps(request.POST["file_{}_tags"
+                                   .format(file.id)].split(","))
+            file.save()
+
+        file = FileMetaData.objects.create()
+        file.name = "File {}".format(file.id)
+        file.save()
+
     return redirect('project-admin:config-file-settings')
 
 
 def delete_file(request, file_id):
-    file = FileMetaData.objects.get(id=file_id)
-    file.delete()
+    """
+    Delete file metadata object
+    """
+    if request.user.username != 'admin':
+        return redirect('project-admin:home')
+
+    if request.method == 'POST':
+        files = FileMetaData.objects.all()
+        for file in files:
+            file.name = request.POST["file_{}_name".format(file.id)]
+            file.description = request.POST["file_{}_description"
+                                            .format(file.id)]
+            file.tags = json.dumps(request.POST["file_{}_tags"
+                                   .format(file.id)].split(","))
+            file.save()
+
+        file = FileMetaData.objects.get(id=file_id)
+        file.delete()
+
     return redirect('project-admin:config-file-settings')
