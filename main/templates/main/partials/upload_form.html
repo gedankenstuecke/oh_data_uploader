@@ -26,11 +26,8 @@
             <td>{{ file.description }}</td>
             <td>{{ file.tags }}</td>
             <td>
-              <label class="btn btn-default">
-                Browse <input id="{% concatenate "file" file.id %}"
-                              type="file" name="{% concatenate "file" file.id %}"
-                              class="hidden">
-              </label>
+                <input type="file" name="{% concatenate "file" file.id %}"
+                       id="{% concatenate "file" file.id %}">
             </td>
           </tr>
         {% endfor %}
