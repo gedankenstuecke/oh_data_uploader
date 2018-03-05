@@ -5,6 +5,7 @@ from open_humans.models import OpenHumansMember
 from main.views import upload_file_to_oh
 import requests_mock
 from unittest.mock import mock_open, patch
+from main.templatetags.utilities import concatenate
 
 OH_BASE_URL = settings.OPENHUMANS_OH_BASE_URL
 OH_API_BASE = OH_BASE_URL + '/api/direct-sharing'
@@ -120,3 +121,9 @@ class LoginTestCase(TestCase):
         c = Client()
         response = c.get("/list")
         self.assertRedirects(response, '/')
+
+    def test_concatenate(self):
+        """
+        Test concatenate template function
+        """
+        self.assertEqual(concatenate("a", "b", "c"), "a_b_c")
