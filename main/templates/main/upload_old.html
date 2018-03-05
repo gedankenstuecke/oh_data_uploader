@@ -11,17 +11,29 @@
     <h2>Upload your data</h2>
 
     <form method="post" enctype="multipart/form-data" action="{% url 'complete' %}">
-      {% if form.errors %}
-      <div class="well">
-        <b>Errors</b><br>
-        {{ form.errors }}
-      </div>
-      {% endif %}
       {% csrf_token %}
-      <p>
-        (complete zip-file as downloaded)<br>
-        <input type="file" name="file" class="btn">
-      </p>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Tags</th>
+          </tr>
+        </thead>
+        <tbody>
+        {% for file in files %}
+          <tr>
+            <td>{{ file.name }}</td>
+            <td>{{ file.description }}</td>
+            <td>{{ file.tags }}</td>
+            <td>
+                <input type="file" name="{% concatenate "file" file.id %}"
+                       id="{% concatenate "file" file.id %}">
+            </td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
       <input class="btn btn-primary" type="submit" value="Upload your data">
     </form>
     <p class="lead">

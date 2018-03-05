@@ -2,7 +2,7 @@ from django.conf import settings
 from django.contrib.auth import get_user_model, login
 from django.shortcuts import redirect, render
 
-from .models import ProjectConfiguration
+from .models import ProjectConfiguration, FileMetaData
 import json
 
 User = get_user_model()
@@ -14,19 +14,12 @@ def home(request):
     """
     if request.user.username == 'admin':
         project_config = ProjectConfiguration.objects.get(id=1)
-        context = {'project_config': project_config}
+        files = FileMetaData.objects.all()
+        for file in files:
+            file.tags = file.get_tags()
+        context = {'project_config': project_config, 'files': files}
         return render(request, 'project_admin/home.html', context=context)
-    else:
-        return redirect('project-admin:login')
-
-
-def config(request):
-    """
-    Edit project config.
-    """
-    project_config = ProjectConfiguration.objects.get(id=1)
-    context = {'project_config': project_config}
-    return render(request, 'project_admin/config.html', context=context)
+    return redirect('project-admin:login')
 
 
 def admin_login(request):
@@ -95,21 +88,15 @@ def config_file_settings(request):
     if request.user.username != 'admin':
         return redirect('project-admin:home')
 
-    project_config = ProjectConfiguration.objects.get(id=1)
-
     if request.method == 'POST':
-        project_config.file_description = request.POST['file_description']
-        tags = request.POST['file_tags']
-        print(tags)
-        project_config.file_tags = json.dumps(tags.split(","))
-        project_config.save()
+        update_file_metadata(request.POST)
         return redirect('project-admin:home')
 
-    tags = ','.join(json.loads(project_config.file_tags)
-                    ) if project_config.file_tags else ''
-    context = {"tags": tags}
+    files = FileMetaData.objects.all()
+    for file in files:
+        file.tags = file.get_tags()
     return render(request, 'project_admin/config-file-settings.html',
-                  context=context)
+                  context={"files": files})
 
 
 def config_homepage_text(request):
@@ -130,3 +117,45 @@ def config_homepage_text(request):
         return redirect('project-admin:home')
 
     return render(request, 'project_admin/config-homepage-text.html')
+
+
+def add_file(request):
+    """
+    Add file metadata object
+    """
+    if request.user.username != 'admin':
+        return redirect('project-admin:home')
+
+    if request.method == 'POST':
+        update_file_metadata(request.POST)
+        file = FileMetaData.objects.create()
+        file.name = "File {}".format(file.id)
+        file.save()
+
+    return redirect('project-admin:config-file-settings')
+
+
+def delete_file(request, file_id):
+    """
+    Delete file metadata object
+    """
+    if request.user.username != 'admin':
+        return redirect('project-admin:home')
+
+    if request.method == 'POST':
+        update_file_metadata(request.POST)
+        file = FileMetaData.objects.get(id=file_id)
+        file.delete()
+
+    return redirect('project-admin:config-file-settings')
+
+
+def update_file_metadata(metadata):
+    files = FileMetaData.objects.all()
+    for file in files:
+        file.name = metadata["file_{}_name".format(file.id)]
+        file.description = metadata["file_{}_description"
+                                    .format(file.id)]
+        file.tags = json.dumps(metadata["file_{}_tags"
+                               .format(file.id)].split(","))
+        file.save()

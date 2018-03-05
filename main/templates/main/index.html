@@ -33,7 +33,7 @@
             </li>
           </ol>
 
-          {% if config.oh_client_id and config.file_description and config.file_tags and config.oh_client_secret %}
+          {% if config.oh_client_id and config.oh_client_secret and file_num %}
           <a class="btn btn-primary btn-lg"
             href="{{ auth_url }}">
               Get started / Login
