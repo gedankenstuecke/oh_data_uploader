@@ -79,19 +79,30 @@
   <a href="{% url 'project-admin:config-file-settings' %}" class="btn btn-primary">Edit file settings</a>
 </h2>
 
+{% if files|length %}
 <table class="table">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Description</th>
+      <th>Tags</th>
+    </tr>
+  </thead>
   <tbody>
+    {% for file in files %}
     <tr>
-      <th>File description (Required)</th>
-      <td>{{ config.file_description }}</td>
+      <td>{{ file.name }}</td>
+      <td>{{ file.description }}</td>
+      <td>{{ file.tags }}</td>
     </tr>
-    <tr>
-      <th>File tags (Required)</th>
-      <td>{{ config.file_tags }}</td>
-    </tr>
+    {% endfor %}
   </tbody>
 </table>
-
+{% else %}
+<div class="text-center">
+    <p class="lead">No files configured</p>
+</div>
+{% endif %}
 <h2>
   Webpage content
   <a href="{% url 'project-admin:config-homepage-text' %}" class="btn btn-primary">Edit Webpage contents</a>

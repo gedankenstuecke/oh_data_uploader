@@ -15,4 +15,7 @@ urlpatterns = [
     url(r'^config-homepage-text/?$',
         views.config_homepage_text, name='config-homepage-text'),
     url(r'^login/?$', views.admin_login, name='login'),
+    url(r'^add-file/?$', views.add_file, name='add-file'),
+    url(r'^delete-file/(?P<file_id>\w+)/?$', views.delete_file,
+        name='delete-file'),
 ]

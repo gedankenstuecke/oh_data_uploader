@@ -10,14 +10,14 @@ from django.contrib.auth import login, logout
 from django.shortcuts import redirect, render
 from django.contrib import messages
 from django.utils.safestring import mark_safe
+from django.core.serializers import serialize
 
 import ohapi
 import requests
 
 from open_humans.models import OpenHumansMember
-from project_admin.models import ProjectConfiguration
+from project_admin.models import ProjectConfiguration, FileMetaData
 
-from .forms import UploadFileForm
 logger = logging.getLogger(__name__)
 
 OH_BASE_URL = settings.OPENHUMANS_OH_BASE_URL
@@ -110,13 +110,7 @@ def upload_file_to_oh(oh_member, filehandle, metadata):
     This process is "direct to S3" using three steps: 1. get S3 target URL from
     Open Humans, 2. Perform the upload, 3. Notify Open Humans when complete.
     """
-    # Remove any previous file - replace with this one.
     client_info = ProjectConfiguration.objects.get(id=1).client_info
-
-    ohapi.api.delete_files(
-        project_member_id=oh_member.oh_id,
-        access_token=oh_member.get_access_token(**client_info),
-        all_files=True)
 
     # Get the S3 target from Open Humans.
     upload_url = '{}?access_token={}'.format(
@@ -153,15 +147,16 @@ def index(request):
     Starting page for app.
     """
     proj_config = ProjectConfiguration.objects.get(id=1)
+    file_num = FileMetaData.objects.all().count()
     if proj_config.oh_client_id:
         auth_url = ohapi.api.oauth2_auth_url(
             client_id=proj_config.oh_client_id,
             redirect_uri=OH_OAUTH2_REDIRECT_URI)
     else:
         auth_url = 'http://www.example.com'
-    if not proj_config.file_description or \
-       not proj_config.oh_client_secret or \
-       not proj_config.file_tags or not proj_config.oh_client_id:
+    if not proj_config.oh_client_secret or \
+       not proj_config.oh_client_id or \
+       not file_num:
         messages.info(request,
                       mark_safe(
                           "<b><a href='/project-admin'>"
@@ -169,7 +164,8 @@ def index(request):
                           "</a></b>"
                       ))
     context = {'auth_url': auth_url,
-               'index_page': "".join(proj_config.homepage_text)}
+               'index_page': "".join(proj_config.homepage_text),
+               'file_num': file_num}
     if request.user.is_authenticated and request.user.username != 'admin':
         return redirect('overview')
     return render(request, 'main/index.html', context=context)
@@ -180,8 +176,14 @@ def overview(request):
     if request.user.is_authenticated and request.user.username != 'admin':
         oh_member = request.user.openhumansmember
         proj_config = ProjectConfiguration.objects.get(id=1)
+        files = FileMetaData.objects.all()
+        files_js = serialize('json', files)
+        for file in files:
+            file.tags = file.get_tags()
         context = {'oh_id': oh_member.oh_id,
                    'oh_member': oh_member,
+                   'files': files,
+                   'files_js': files_js,
                    'access_token': oh_member.get_access_token(**client_info),
                    "overview": "".join(proj_config.overview)}
         return render(request, 'main/overview.html', context=context)
@@ -213,25 +215,29 @@ def complete(request):
         else:
             oh_member = request.user.openhumansmember
 
-        form = UploadFileForm()
+        files = FileMetaData.objects.all()
+        files_js = serialize('json', files)
+        for file in files:
+            file.tags = file.get_tags()
         context = {'oh_id': oh_member.oh_id,
                    'oh_member': oh_member,
-                   'form': form,
+                   'files': files,
+                   'files_js': files_js,
                    'upload_description': proj_config.upload_description}
         return render(request, 'main/complete.html',
                       context=context)
 
     elif request.method == 'POST':
-        form = UploadFileForm(request.POST, request.FILES)
-        if form.is_valid():
-            metadata = {'tags': json.loads(proj_config.file_tags),
-                        'description': proj_config.file_description}
-            upload_file_to_oh(
-                request.user.openhumansmember,
-                request.FILES['file'],
-                metadata)
-        else:
-            logger.debug('INVALID FORM')
+        files = FileMetaData.objects.all()
+        for file in files:
+            uploaded_file = request.FILES.get('file_{}'.format(file.id))
+            if uploaded_file is not None:
+                metadata = {'tags': json.loads(file.tags),
+                            'description': file.description}
+                upload_file_to_oh(
+                    request.user.openhumansmember,
+                    uploaded_file,
+                    metadata)
         return redirect('index')
 
 
@@ -246,9 +252,12 @@ def logout_user(request):
 
 def upload_old(request):
     proj_config = ProjectConfiguration.objects.get(id=1)
-
+    files = FileMetaData.objects.all()
+    for file in files:
+        file.tags = file.get_tags()
     if request.user.is_authenticated:
-        context = {'upload_description': proj_config.upload_description}
+        context = {'upload_description': proj_config.upload_description,
+                   'files': files}
         return render(request, 'main/upload_old.html',
                       context=context)
     return redirect('index')

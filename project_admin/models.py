@@ -1,5 +1,6 @@
 from django.core.exceptions import ValidationError
 from django.db import models
+import json
 
 
 class ProjectConfiguration(models.Model):
@@ -21,13 +22,6 @@ class ProjectConfiguration(models.Model):
         blank=True)
     oh_activity_page = models.TextField(
         help_text='The URL where we can find your project in Open Humans.',
-        blank=True)
-    file_description = models.TextField(
-        help_text='Description of the type of data being uploaded.',
-        blank=True)
-    file_tags = models.TextField(
-        help_text='List of tags that describe file uploads, stored as a '
-                  'JSON-formatted array',
         blank=True)
     logo_url = models.TextField(
         blank=True,
@@ -52,3 +46,23 @@ class ProjectConfiguration(models.Model):
         if ProjectConfiguration.objects.exists() and not self.pk:
             raise ValidationError('Only one ProjectConfiguration allowed')
         return super(ProjectConfiguration, self).save(*args, **kwargs)
+
+
+class FileMetaData(models.Model):
+    """
+    Store file metadata
+    """
+    name = models.TextField(
+        help_text='Name of the file (for representational purposes '
+                  'in the project)'
+    )
+    description = models.TextField(
+        help_text='Description of the type of data being uploaded.',
+        blank=True)
+    tags = models.TextField(
+        help_text='List of tags that describe file uploads, stored as a '
+                  'JSON-formatted array',
+        blank=True)
+
+    def get_tags(self):
+        return ','.join(json.loads(self.tags)) if self.tags else ''
