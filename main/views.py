@@ -38,14 +38,12 @@ def oh_code_to_member(code):
             proj_config.oh_client_id and code):
         logger.error('OH_CLIENT_SECRET or code are unavailable')
         return None
-
     data = ohapi.api.oauth2_token_exchange(
         client_id=proj_config.oh_client_id,
         client_secret=proj_config.oh_client_secret,
         code=code,
         redirect_uri=OH_OAUTH2_REDIRECT_URI,
         base_url=OH_BASE_URL)
-
     if 'error' in data:
         logger.debug('Error in token exchange: {}'.format(data))
         return None
