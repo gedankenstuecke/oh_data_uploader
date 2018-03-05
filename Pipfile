@@ -9,6 +9,7 @@ name = "pypi"
 
 "flake8" = "*"
 coverage = "*"
+vcrpy = "*"
 
 
 [packages]
