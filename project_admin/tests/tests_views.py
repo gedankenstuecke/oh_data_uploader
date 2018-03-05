@@ -34,6 +34,7 @@ class AdminLoginTestCase(TestCase):
                           follow=True)
         self.assertRedirects(response, '/project-admin/')
         self.assertContains(response, "Current Project Configuration")
+        self.assertTemplateUsed(response, 'project_admin/home.html')
 
     def test_admin_login_fail(self):
         """
@@ -44,12 +45,3 @@ class AdminLoginTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Password incorrect")
 
-    def test_project_config_page_returns_correct_html(self):
-        c = Client()
-        response = c.post("/project-admin/login",
-                          {'password': 'test1234'},
-                          follow=True)
-        self.assertContains(response,
-                            '<h1>Current Project Configuration</h1>',
-                            status_code=200)
-        self.assertTemplateUsed(response, 'project_admin/home.html')
