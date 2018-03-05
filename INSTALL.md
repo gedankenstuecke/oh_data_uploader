@@ -15,7 +15,7 @@ pipenv install --three
 pipenv shell
 ```
 
-You should now be in a shell that is specifically set up with all the required Python packages. You can exit this shell at any time by just writing `exit`. If new packages have been added to this repository at any time you can upgrade all the packages for it by typing `pipenv install` again and it will use the existing `Pipfile` and `Pipfile.lock` to install the appropriate modules. 
+You should now be in a shell that is specifically set up with all the required Python packages. You can exit this shell any time by just writing `exit`. If new packages have been added to this repository any time, you can upgrade all the packages for it by typing `pipenv install` again and it will use the existing `Pipfile` and `Pipfile.lock` to install the appropriate modules. 
 
 ### *Step 2: Install Heroku Command Line Interface (CLI)*
 
@@ -34,11 +34,11 @@ brew tap heroku/brew
 brew install heroku
 ```
 
-This second options adds the Heroku repository to your Homebrew configuration allowing you to access all of the Heroku library rather than the single `heroku` application.
+The second option shown above adds the Heroku repository to your Homebrew configuration allowing you to access all of the Heroku library rather than the single `heroku` application.
 
 ### *Step 3: Set-up the local `.env` file*
 Once this is done you can complete minimal setup by:
-* Create an `.env` file from the example: `cp .env.sample .env`)
+* Create an `.env` file from the example: `cp .env.sample .env`
 * Edit `.env` to set a random string for `SECRET_KEY` and `ADMIN_PASSWORD`
 * Make sure to activate your `Python` environment with `pipenv shell`
 * Migrate your database using `heroku local:run python manage.py migrate`
@@ -48,7 +48,7 @@ Now you can run the webserver of your local heroku environment using `heroku loc
 
 This should give you a development server up and running on `http://0.0.0.0:5000`.
 On `http://0.0.0.0:5000/project-admin/` you should fine the project admin interface,
-you can log into it using the `ADMIN_PASSWORD` you set above.
+you can login to it using the `ADMIN_PASSWORD` you set above.
 
 
 ## FAQ
