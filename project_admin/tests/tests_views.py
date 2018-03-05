@@ -44,4 +44,3 @@ class AdminLoginTestCase(TestCase):
         response = c.post("/project-admin/login/", {'password': 'meep'})
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Password incorrect")
-
