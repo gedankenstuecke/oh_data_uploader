@@ -15,8 +15,8 @@ from django.core.serializers import serialize
 import ohapi
 import requests
 
-from open_humans.models import OpenHumansMember
 from project_admin.models import ProjectConfiguration, FileMetaData
+from .helpers import get_create_member
 
 logger = logging.getLogger(__name__)
 
@@ -49,25 +49,7 @@ def oh_code_to_member(code):
         return None
 
     if 'access_token' in data:
-        oh_id = ohapi.api.exchange_oauth2_member(
-            access_token=data['access_token'])['project_member_id']
-        try:
-            oh_member = OpenHumansMember.objects.get(oh_id=oh_id)
-            logger.debug('Member {} re-authorized.'.format(oh_id))
-            oh_member.access_token = data['access_token']
-            oh_member.refresh_token = data['refresh_token']
-            oh_member.token_expires = OpenHumansMember.get_expiration(
-                data['expires_in'])
-        except OpenHumansMember.DoesNotExist:
-            oh_member = OpenHumansMember.create(
-                oh_id=oh_id,
-                access_token=data['access_token'],
-                refresh_token=data['refresh_token'],
-                expires_in=data['expires_in'])
-            logger.debug('Member {} created.'.format(oh_id))
-        oh_member.save()
-
-        return oh_member
+        return get_create_member(data)
     else:
         logger.warning('Neither token nor error info in OH response!')
         return None
@@ -140,18 +122,52 @@ def upload_file_to_oh(oh_member, filehandle, metadata):
                         'Bad response when completing upload.')
 
 
-def index(request):
+def iterate_files_upload(request):
     """
-    Starting page for app.
+    iterate over all files to upload them to OH.
     """
-    proj_config = ProjectConfiguration.objects.get(id=1)
-    file_num = FileMetaData.objects.all().count()
+    files = FileMetaData.objects.all()
+    for file in files:
+        uploaded_file = request.FILES.get('file_{}'.format(file.id))
+        if uploaded_file is not None:
+            metadata = {'tags': json.loads(file.tags),
+                        'description': file.description}
+            upload_file_to_oh(
+                request.user.openhumansmember,
+                uploaded_file,
+                metadata)
+
+
+def file_upload_prep_context(oh_member, proj_config):
+    files = FileMetaData.objects.all()
+    files_js = serialize('json', files)
+    for file in files:
+        file.tags = file.get_tags()
+    context = {'oh_id': oh_member.oh_id,
+               'oh_member': oh_member,
+               'files': files,
+               'files_js': files_js,
+               'upload_description': proj_config.upload_description}
+    return context
+
+
+def set_auth_url(proj_config):
     if proj_config.oh_client_id:
         auth_url = ohapi.api.oauth2_auth_url(
             client_id=proj_config.oh_client_id,
             redirect_uri=OH_OAUTH2_REDIRECT_URI)
     else:
         auth_url = 'http://www.example.com'
+    return auth_url
+
+
+def index(request):
+    """
+    Starting page for app.
+    """
+    proj_config = ProjectConfiguration.objects.get(id=1)
+    file_num = FileMetaData.objects.all().count()
+    auth_url = set_auth_url(proj_config)
     if not proj_config.oh_client_secret or \
        not proj_config.oh_client_id or \
        not file_num:
@@ -194,7 +210,6 @@ def complete(request):
     """
     logger.debug("Received user returning from Open Humans.")
 
-    form = None
     proj_config = ProjectConfiguration.objects.get(id=1)
 
     if request.method == 'GET':
@@ -212,30 +227,12 @@ def complete(request):
             return redirect('/')
         else:
             oh_member = request.user.openhumansmember
-
-        files = FileMetaData.objects.all()
-        files_js = serialize('json', files)
-        for file in files:
-            file.tags = file.get_tags()
-        context = {'oh_id': oh_member.oh_id,
-                   'oh_member': oh_member,
-                   'files': files,
-                   'files_js': files_js,
-                   'upload_description': proj_config.upload_description}
+        context = file_upload_prep_context(oh_member, proj_config)
         return render(request, 'main/complete.html',
                       context=context)
 
     elif request.method == 'POST':
-        files = FileMetaData.objects.all()
-        for file in files:
-            uploaded_file = request.FILES.get('file_{}'.format(file.id))
-            if uploaded_file is not None:
-                metadata = {'tags': json.loads(file.tags),
-                            'description': file.description}
-                upload_file_to_oh(
-                    request.user.openhumansmember,
-                    uploaded_file,
-                    metadata)
+        iterate_files_upload(request)
         return redirect('index')
 
 
