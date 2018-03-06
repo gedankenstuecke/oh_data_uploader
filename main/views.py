@@ -139,6 +139,7 @@ def upload_file_to_oh(oh_member, filehandle, metadata):
         raise HTTPError(complete_url, req2.status_code,
                         'Bad response when completing upload.')
 
+
 def iterate_files_upload(request):
     """
     iterate over all files to upload them to OH.
@@ -153,6 +154,7 @@ def iterate_files_upload(request):
                 request.user.openhumansmember,
                 uploaded_file,
                 metadata)
+
 
 def index(request):
     """
