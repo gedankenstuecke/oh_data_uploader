@@ -28,6 +28,27 @@ OH_DIRECT_UPLOAD_COMPLETE = OH_API_BASE + '/project/files/upload/complete/'
 OH_OAUTH2_REDIRECT_URI = '{}/complete'.format(settings.OPENHUMANS_APP_BASE_URL)
 
 
+def get_create_member(data):
+    oh_id = ohapi.api.exchange_oauth2_member(
+        access_token=data['access_token'])['project_member_id']
+    try:
+        oh_member = OpenHumansMember.objects.get(oh_id=oh_id)
+        logger.debug('Member {} re-authorized.'.format(oh_id))
+        oh_member.access_token = data['access_token']
+        oh_member.refresh_token = data['refresh_token']
+        oh_member.token_expires = OpenHumansMember.get_expiration(
+            data['expires_in'])
+    except OpenHumansMember.DoesNotExist:
+        oh_member = OpenHumansMember.create(
+            oh_id=oh_id,
+            access_token=data['access_token'],
+            refresh_token=data['refresh_token'],
+            expires_in=data['expires_in'])
+        logger.debug('Member {} created.'.format(oh_id))
+    oh_member.save()
+    return oh_member
+
+
 def oh_code_to_member(code):
     """
     Exchange code for token, use this to create and return OpenHumansMember.
@@ -49,25 +70,7 @@ def oh_code_to_member(code):
         return None
 
     if 'access_token' in data:
-        oh_id = ohapi.api.exchange_oauth2_member(
-            access_token=data['access_token'])['project_member_id']
-        try:
-            oh_member = OpenHumansMember.objects.get(oh_id=oh_id)
-            logger.debug('Member {} re-authorized.'.format(oh_id))
-            oh_member.access_token = data['access_token']
-            oh_member.refresh_token = data['refresh_token']
-            oh_member.token_expires = OpenHumansMember.get_expiration(
-                data['expires_in'])
-        except OpenHumansMember.DoesNotExist:
-            oh_member = OpenHumansMember.create(
-                oh_id=oh_id,
-                access_token=data['access_token'],
-                refresh_token=data['refresh_token'],
-                expires_in=data['expires_in'])
-            logger.debug('Member {} created.'.format(oh_id))
-        oh_member.save()
-
-        return oh_member
+        return get_create_member(data)
     else:
         logger.warning('Neither token nor error info in OH response!')
         return None
