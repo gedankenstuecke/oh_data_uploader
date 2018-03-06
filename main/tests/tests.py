@@ -6,6 +6,8 @@ from main.views import upload_file_to_oh
 import requests_mock
 from unittest.mock import mock_open, patch
 from main.templatetags.utilities import concatenate
+from main.helpers import get_create_member
+import vcr
 
 OH_BASE_URL = settings.OPENHUMANS_OH_BASE_URL
 OH_API_BASE = OH_BASE_URL + '/api/direct-sharing'
@@ -27,7 +29,7 @@ class LoginTestCase(TestCase):
         settings.DEBUG = True
         call_command('init_proj_config')
         self.factory = RequestFactory()
-        self.oh_member = OpenHumansMember.create(oh_id='1234567890abcdef',
+        self.oh_member = OpenHumansMember.create(oh_id='12345678',
                                                  access_token='foo',
                                                  refresh_token='bar',
                                                  expires_in=2000)
@@ -127,3 +129,20 @@ class LoginTestCase(TestCase):
         Test concatenate template function
         """
         self.assertEqual(concatenate("a", "b", "c"), "a_b_c")
+
+    @vcr.use_cassette('main/tests/fixtures/token_exchange_valid.yaml',
+                      record_mode='none')
+    def test_get_create(self):
+        """
+        Test get/create helper get_create helper
+        """
+        self.assertEqual(1,
+                         OpenHumansMember.objects.all().count())
+        data = {'access_token': 'returnedaccesstoken',
+                'refresh_token': 'refreshed_token',
+                'expires_in': 36000}
+        oh_member = get_create_member(data)
+        self.assertEqual(1,
+                         OpenHumansMember.objects.all().count())
+        self.assertEqual(oh_member.access_token,
+                         "returnedaccesstoken")
