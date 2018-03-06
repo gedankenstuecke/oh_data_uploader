@@ -96,10 +96,11 @@ class LoginTestCase(TestCase):
     @vcr.use_cassette('main/tests/fixtures/delete_single.yaml',
                       record_mode='none')
     def test_delete_single(self):
+        data = {"access_token": 'foo',
+                "refresh_token": 'bar',
+                "expires_in": 36000}
         self.oh_member = OpenHumansMember.create(oh_id='1234567890abcdef',
-                                                 access_token='foo',
-                                                 refresh_token='bar',
-                                                 expires_in=2000)
+                                                 data=data)
         self.oh_member.save()
         self.user = self.oh_member.user
         self.user.set_password('foobar')

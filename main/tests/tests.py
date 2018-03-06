@@ -29,10 +29,11 @@ class LoginTestCase(TestCase):
         settings.DEBUG = True
         call_command('init_proj_config')
         self.factory = RequestFactory()
+        data = {"access_token": 'foo',
+                "refresh_token": 'bar',
+                "expires_in": 36000}
         self.oh_member = OpenHumansMember.create(oh_id='12345678',
-                                                 access_token='foo',
-                                                 refresh_token='bar',
-                                                 expires_in=2000)
+                                                 data=data)
         self.oh_member.save()
         self.user = self.oh_member.user
         self.user.set_password('foobar')

@@ -14,10 +14,11 @@ class DeleteTests(TestCase):
     def setUp(self):
         settings.DEBUG = True
         call_command('init_proj_config')
+        data = {"access_token": 'foo',
+                "refresh_token": 'bar',
+                "expires_in": 36000}
         self.oh_member = OpenHumansMember.create(oh_id=1234,
-                                                 access_token='foo',
-                                                 refresh_token='bar',
-                                                 expires_in=36000)
+                                                 data=data)
         self.user = User(username='user1')
         self.user.save()
 

@@ -22,9 +22,7 @@ def get_create_member(data):
     except OpenHumansMember.DoesNotExist:
         oh_member = OpenHumansMember.create(
             oh_id=oh_id,
-            access_token=data['access_token'],
-            refresh_token=data['refresh_token'],
-            expires_in=data['expires_in'])
+            data=data)
         logger.debug('Member {} created.'.format(oh_id))
     oh_member.save()
     return oh_member

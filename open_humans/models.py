@@ -50,7 +50,7 @@ class OpenHumansMember(models.Model):
         return (arrow.now() + timedelta(seconds=expires_in)).format()
 
     @classmethod
-    def create(cls, oh_id, access_token, refresh_token, expires_in):
+    def create(cls, oh_id, data):
         new_username = make_unique_username(
             base='{}_openhumans'.format(oh_id))
         new_user = User(username=new_username)
@@ -58,9 +58,9 @@ class OpenHumansMember(models.Model):
         oh_member = cls(
             user=new_user,
             oh_id=oh_id,
-            access_token=access_token,
-            refresh_token=refresh_token,
-            token_expires=cls.get_expiration(expires_in))
+            access_token=data["access_token"],
+            refresh_token=data["refresh_token"],
+            token_expires=cls.get_expiration(data["expires_in"]))
         return oh_member
 
     def __str__(self):
