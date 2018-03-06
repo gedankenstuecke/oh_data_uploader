@@ -156,6 +156,19 @@ def iterate_files_upload(request):
                 metadata)
 
 
+def file_upload_prep_context(oh_member, proj_config):
+    files = FileMetaData.objects.all()
+    files_js = serialize('json', files)
+    for file in files:
+        file.tags = file.get_tags()
+    context = {'oh_id': oh_member.oh_id,
+               'oh_member': oh_member,
+               'files': files,
+               'files_js': files_js,
+               'upload_description': proj_config.upload_description}
+    return context
+
+
 def set_auth_url(proj_config):
     if proj_config.oh_client_id:
         auth_url = ohapi.api.oauth2_auth_url(
@@ -232,16 +245,7 @@ def complete(request):
             return redirect('/')
         else:
             oh_member = request.user.openhumansmember
-
-        files = FileMetaData.objects.all()
-        files_js = serialize('json', files)
-        for file in files:
-            file.tags = file.get_tags()
-        context = {'oh_id': oh_member.oh_id,
-                   'oh_member': oh_member,
-                   'files': files,
-                   'files_js': files_js,
-                   'upload_description': proj_config.upload_description}
+        context = file_upload_prep_context(oh_member, proj_config)
         return render(request, 'main/complete.html',
                       context=context)
 
