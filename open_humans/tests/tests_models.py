@@ -3,15 +3,17 @@ from django.core.management import call_command
 from django.conf import settings
 from open_humans.models import OpenHumansMember, make_unique_username
 from django.contrib.auth.models import User
+import vcr
 
 
 class OpenHumansMemberTest(TestCase):
     def setUp(self):
         settings.DEBUG = True
         call_command('init_proj_config')
-        self.oh_member = OpenHumansMember(oh_id=1234,
-                                          access_token='foo',
-                                          refresh_token='bar')
+        self.oh_member = OpenHumansMember.create(oh_id=1234,
+                                                 access_token='foo',
+                                                 refresh_token='bar',
+                                                 expires_in=36000)
         self.user = User(username='user1')
         self.user.save()
 
@@ -22,3 +24,11 @@ class OpenHumansMemberTest(TestCase):
     def tests_unique(self):
         self.assertEqual(make_unique_username("user1"),
                          "user12")
+
+    @vcr.use_cassette('open_humans/tests/fixtures/refresh.yaml',
+                      record_mode='none')
+    def tests_refresh_token(self):
+        old_access_token = self.oh_member.access_token
+        self.oh_member._refresh_tokens('client_id', 'heregoesyoursecretkey')
+        assert old_access_token != self.oh_member.access_token
+        self.assertEqual(self.oh_member.access_token, "anewaccesstoken")
