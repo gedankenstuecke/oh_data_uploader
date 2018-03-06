@@ -16,7 +16,7 @@ import ohapi
 import requests
 
 from project_admin.models import ProjectConfiguration, FileMetaData
-from .helpers import get_create_member
+from .helpers import oh_code_to_member
 
 logger = logging.getLogger(__name__)
 
@@ -26,33 +26,6 @@ OH_DIRECT_UPLOAD = OH_API_BASE + '/project/files/upload/direct/'
 OH_DIRECT_UPLOAD_COMPLETE = OH_API_BASE + '/project/files/upload/complete/'
 
 OH_OAUTH2_REDIRECT_URI = '{}/complete'.format(settings.OPENHUMANS_APP_BASE_URL)
-
-
-def oh_code_to_member(code):
-    """
-    Exchange code for token, use this to create and return OpenHumansMember.
-    If a matching OpenHumansMember already exists in db, update and return it.
-    """
-    proj_config = ProjectConfiguration.objects.get(id=1)
-    if not (proj_config.oh_client_secret and
-            proj_config.oh_client_id and code):
-        logger.error('OH_CLIENT_SECRET or code are unavailable')
-        return None
-    data = ohapi.api.oauth2_token_exchange(
-        client_id=proj_config.oh_client_id,
-        client_secret=proj_config.oh_client_secret,
-        code=code,
-        redirect_uri=OH_OAUTH2_REDIRECT_URI,
-        base_url=OH_BASE_URL)
-    if 'error' in data:
-        logger.debug('Error in token exchange: {}'.format(data))
-        return None
-
-    if 'access_token' in data:
-        return get_create_member(data)
-    else:
-        logger.warning('Neither token nor error info in OH response!')
-        return None
 
 
 def delete_file(request, file_id):
@@ -204,6 +177,16 @@ def overview(request):
     return redirect('index')
 
 
+def login_member(request):
+    code = request.GET.get('code', '')
+    oh_member = oh_code_to_member(code=code)
+    if oh_member:
+        # Log in the user.
+        user = oh_member.user
+        login(request, user,
+              backend='django.contrib.auth.backends.ModelBackend')
+
+
 def complete(request):
     """
     Receive user from Open Humans. Store data, start data upload task.
@@ -213,16 +196,8 @@ def complete(request):
     proj_config = ProjectConfiguration.objects.get(id=1)
 
     if request.method == 'GET':
-        # Exchange code for token.
-        # This creates an OpenHumansMember and associated User account.
-        code = request.GET.get('code', '')
-        oh_member = oh_code_to_member(code=code)
-        if oh_member:
-            # Log in the user.
-            user = oh_member.user
-            login(request, user,
-                  backend='django.contrib.auth.backends.ModelBackend')
-        elif not request.user.is_authenticated:
+        login_member(request)
+        if not request.user.is_authenticated:
             logger.debug('Invalid code exchange. User returned to start page.')
             return redirect('/')
         else:
