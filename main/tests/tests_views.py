@@ -92,3 +92,21 @@ class LoginTestCase(TestCase):
         self.assertTemplateUsed(response, 'main/complete.html')
         self.assertEqual(1,
                          OpenHumansMember.objects.all().count())
+
+    @vcr.use_cassette('main/tests/fixtures/delete_single.yaml',
+                      record_mode='none')
+    def test_delete_single(self):
+        self.oh_member = OpenHumansMember.create(oh_id='1234567890abcdef',
+                                                 access_token='foo',
+                                                 refresh_token='bar',
+                                                 expires_in=2000)
+        self.oh_member.save()
+        self.user = self.oh_member.user
+        self.user.set_password('foobar')
+        self.user.save()
+        c = Client()
+        c.login(username=self.user.username, password='foobar')
+
+        response = c.get("/delete/1337", follow=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'main/list.html')
