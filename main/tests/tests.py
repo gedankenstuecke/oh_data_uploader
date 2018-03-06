@@ -144,3 +144,5 @@ class LoginTestCase(TestCase):
         oh_member = get_create_member(data)
         self.assertEqual(1,
                          OpenHumansMember.objects.all().count())
+        self.assertEqual(oh_member.access_token,
+                         "returnedaccesstoken")
