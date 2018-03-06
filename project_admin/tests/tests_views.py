@@ -236,3 +236,26 @@ class AdminLoginTestCase(TestCase):
         response = c.get('/project-admin/config-file-settings')
         self.assertContains(response, "my,tags,are,good")
         self.assertEqual(FileMetaData.objects.all().count(), 1)
+
+    def test_add_file_logged_out(self):
+        """
+        Test add_file function when logged out
+        """
+        c = Client()
+        response = c.get("/project-admin/add-file/")
+        self.assertRedirects(response, '/project-admin/',
+                             status_code=302, target_status_code=302)
+
+    def test_get_add_file(self):
+        """
+        Test making a get request to
+        add_file.
+        """
+        c = Client()
+        response = c.post("/project-admin/login/",
+                          {'password': 'test1234'},
+                          follow=True)
+        response = c.get("/project-admin/add-file/")
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response,
+                             '/project-admin/config-file-settings')
