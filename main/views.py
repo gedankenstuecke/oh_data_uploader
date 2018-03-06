@@ -139,6 +139,20 @@ def upload_file_to_oh(oh_member, filehandle, metadata):
         raise HTTPError(complete_url, req2.status_code,
                         'Bad response when completing upload.')
 
+def iterate_files_upload(request):
+    """
+    iterate over all files to upload them to OH.
+    """
+    files = FileMetaData.objects.all()
+    for file in files:
+        uploaded_file = request.FILES.get('file_{}'.format(file.id))
+        if uploaded_file is not None:
+            metadata = {'tags': json.loads(file.tags),
+                        'description': file.description}
+            upload_file_to_oh(
+                request.user.openhumansmember,
+                uploaded_file,
+                metadata)
 
 def index(request):
     """
@@ -226,16 +240,7 @@ def complete(request):
                       context=context)
 
     elif request.method == 'POST':
-        files = FileMetaData.objects.all()
-        for file in files:
-            uploaded_file = request.FILES.get('file_{}'.format(file.id))
-            if uploaded_file is not None:
-                metadata = {'tags': json.loads(file.tags),
-                            'description': file.description}
-                upload_file_to_oh(
-                    request.user.openhumansmember,
-                    uploaded_file,
-                    metadata)
+        iterate_files_upload(request)
         return redirect('index')
 
 
