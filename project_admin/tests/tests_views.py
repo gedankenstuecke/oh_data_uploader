@@ -1,6 +1,7 @@
 from django.test import TestCase, Client
 from django.core.management import call_command
 from django.conf import settings
+from project_admin.models import FileMetaData
 
 
 class AdminLoginTestCase(TestCase):
@@ -23,6 +24,14 @@ class AdminLoginTestCase(TestCase):
         c = Client()
         response = c.get("/project-admin/")
         self.assertRedirects(response, '/project-admin/login')
+
+    def test_admin_login_page(self):
+        """
+        Test that login page renders
+        """
+        c = Client()
+        response = c.get("/project-admin/login")
+        self.assertTemplateUsed(response, 'project_admin/login.html')
 
     def test_admin_login_success(self):
         """
@@ -202,3 +211,28 @@ class AdminLoginTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response,
                                 'project_admin/config-general-settings.html')
+
+    def test_file_metadata(self):
+        c = Client()
+        # test add file w/o login
+        response = c.post("/project-admin/add-file/", follow=True)
+        self.assertRedirects(response, "/project-admin/login", status_code=302)
+        # login & test add file
+        response = c.post("/project-admin/login/",
+                          {'password': 'test1234'},
+                          follow=True)
+        self.assertEqual(FileMetaData.objects.all().count(), 0)
+        response = c.post("/project-admin/add-file/",
+                          follow=True)
+        self.assertRedirects(response,
+                             "/project-admin/config-file-settings",
+                             status_code=302)
+        self.assertEqual(FileMetaData.objects.all().count(), 1)
+        # enter metadata for file & test saving
+        response = c.post('/project-admin/config-file-settings/',
+                          {'file_1_name': 'foo',
+                           'file_1_description': 'bar',
+                           'file_1_tags': 'my,tags,are,good'},)
+        response = c.get('/project-admin/config-file-settings')
+        self.assertContains(response, "my,tags,are,good")
+        self.assertEqual(FileMetaData.objects.all().count(), 1)
