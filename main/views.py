@@ -204,6 +204,16 @@ def overview(request):
     return redirect('index')
 
 
+def login_member(request):
+    code = request.GET.get('code', '')
+    oh_member = oh_code_to_member(code=code)
+    if oh_member:
+        # Log in the user.
+        user = oh_member.user
+        login(request, user,
+              backend='django.contrib.auth.backends.ModelBackend')
+
+
 def complete(request):
     """
     Receive user from Open Humans. Store data, start data upload task.
@@ -213,16 +223,8 @@ def complete(request):
     proj_config = ProjectConfiguration.objects.get(id=1)
 
     if request.method == 'GET':
-        # Exchange code for token.
-        # This creates an OpenHumansMember and associated User account.
-        code = request.GET.get('code', '')
-        oh_member = oh_code_to_member(code=code)
-        if oh_member:
-            # Log in the user.
-            user = oh_member.user
-            login(request, user,
-                  backend='django.contrib.auth.backends.ModelBackend')
-        elif not request.user.is_authenticated:
+        login_member(request)
+        if not request.user.is_authenticated:
             logger.debug('Invalid code exchange. User returned to start page.')
             return redirect('/')
         else:
