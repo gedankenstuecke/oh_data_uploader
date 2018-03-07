@@ -297,3 +297,27 @@ class AdminLoginTestCase(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertRedirects(response,
                              '/project-admin/config-file-settings')
+
+    def test_delete_file(self):
+        c = Client()
+        response = c.post("/project-admin/login/",
+                          {'password': 'test1234'},
+                          follow=True)
+        self.assertEqual(FileMetaData.objects.all().count(), 0)
+        response = c.post("/project-admin/add-file/",
+                          follow=True)
+        self.assertRedirects(response,
+                             "/project-admin/config-file-settings",
+                             status_code=302)
+        response = c.post('/project-admin/config-file-settings/',
+                          {'file_1_name': 'foo',
+                           'file_1_description': 'bar',
+                           'file_1_tags': 'my,tags,are,good'},)
+        self.assertEqual(FileMetaData.objects.all().count(), 1)
+        response = c.post("/project-admin/delete-file/1/",
+                          {'file_1_name': 'foo',
+                           'file_1_description': 'bar',
+                           'file_1_tags': 'my,tags,are,good'}, follow=True)
+        self.assertEqual(FileMetaData.objects.all().count(), 0)
+        self.assertRedirects(response,
+                             '/project-admin/config-file-settings')
