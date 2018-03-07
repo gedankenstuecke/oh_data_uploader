@@ -11,12 +11,14 @@
     {% csrf_token %}
     <div>
       <h3>Upload your data </h3>
+      <div class="table-responsive">
       <table class="table">
         <thead>
           <tr>
             <th>Name</th>
             <th>Description</th>
             <th>Tags</th>
+            <th></th>
           </tr>
         </thead>
         <tbody>
@@ -33,6 +35,7 @@
         {% endfor %}
         </tbody>
       </table>
+      </div>
     </div>
     <input type="button" class="btn btn-primary" value="Upload your data" onClick="startUpload()">
   </form>
