@@ -45,6 +45,21 @@ class AdminLoginTestCase(TestCase):
         self.assertContains(response, "Current Project Configuration")
         self.assertTemplateUsed(response, 'project_admin/home.html')
 
+    def test_admin_login_when_env_not_set(self):
+        """
+        Test successful log in attempt.
+        """
+        c = Client()
+        settings.ADMIN_PASSWORD = ''
+        response = c.post("/project-admin/login/",
+                          {'password': 'test1234'},
+                          follow=True)
+        settings.ADMIN_PASSWORD = 'test1234'
+        self.assertEqual(response.context[0]['error'],
+                         "ADMIN_PASSWORD environment variable needs to be "
+                         "set!")
+        self.assertTemplateUsed(response, 'project_admin/login.html')
+
     def test_admin_login_fail(self):
         """
         Test unsuccessful login attempt.
@@ -256,6 +271,29 @@ class AdminLoginTestCase(TestCase):
                           {'password': 'test1234'},
                           follow=True)
         response = c.get("/project-admin/add-file/")
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response,
+                             '/project-admin/config-file-settings')
+
+    def test_delete_file_logged_out(self):
+        """
+        Test delete file when logged out.
+        """
+        c = Client()
+        response = c.post("/project-admin/delete-file/1")
+        self.assertRedirects(response, '/project-admin/',
+                             status_code=302, target_status_code=302)
+
+    def test_get_delete_file(self):
+        """
+        Test making a get request to
+        delete_file.
+        """
+        c = Client()
+        response = c.post("/project-admin/login/",
+                          {'password': 'test1234'},
+                          follow=True)
+        response = c.get("/project-admin/delete-file/1")
         self.assertEqual(response.status_code, 302)
         self.assertRedirects(response,
                              '/project-admin/config-file-settings')
