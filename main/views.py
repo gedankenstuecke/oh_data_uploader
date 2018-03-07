@@ -81,7 +81,8 @@ def upload_file_to_oh(oh_member, filehandle, metadata):
     req2 = requests.put(url=req1.json()['url'], data=filehandle)
     if req2.status_code != 200:
         raise HTTPError(req1.json()['url'], req2.status_code,
-                        'Bad response when uploading to target.')
+                        'Bad response when uploading to target.',
+                        hdrs=None, fp=None)
 
     # Report completed upload to Open Humans.
     complete_url = ('{}?access_token={}'.format(
