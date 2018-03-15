@@ -95,6 +95,22 @@ class LoginTestCase(TestCase):
         self.assertEqual(1,
                          OpenHumansMember.objects.all().count())
 
+    def test_complete_unauthenticated(self):
+        """
+        Tests making a get request to complete
+        when not authenticated.
+        """
+        with self.assertLogs(logger='main.views', level='DEBUG') as log:
+            c = Client()
+            self.assertEqual(0,
+                             OpenHumansMember.objects.all().count())
+            response = c.get("/complete", {'code': 'mytestcode'})
+        self.assertIn(
+                    "Invalid code exchange. User returned to start page.",
+                    log.output[len(log.output)-1])
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, "/")
+
     def test_log_out_logged_out(self):
         """
         Tests logout function
