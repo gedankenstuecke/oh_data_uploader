@@ -249,7 +249,9 @@ def about(request):
 def list_files(request):
     if request.user.is_authenticated and request.user.username != 'admin':
         oh_member = request.user.openhumansmember
-        data = ohapi.api.exchange_oauth2_member(oh_member.get_access_token())
+        client_info = ProjectConfiguration.objects.get(id=1).client_info
+        data = ohapi.api.exchange_oauth2_member(
+                    oh_member.get_access_token(**client_info))
         context = {'files': data['data']}
         return render(request, 'main/list.html',
                       context=context)
