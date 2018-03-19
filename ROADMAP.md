@@ -17,5 +17,5 @@ What things do we want to work on next? And what did we already achieve?
 - make sure that `APP_BASE_URL` will be stripped of trailing `/`s
 - read project descriptions etc. from `markdown` files somewhere and render accordingly
 - deploy to heroku works thanks to @madprime!
-- styled all forms enough to be useable.
+- styled all forms enough to be usable.
 - travis CI is set up!
