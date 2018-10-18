@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 import os
 import dj_database_url
 from env_tools import apply_env
+from env_tools import env_to_bool, get_enforcement_context
 
 apply_env()
 
@@ -23,15 +24,23 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv('SECRET_KEY', 'whopsthereshouldbeone')
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False if os.getenv('DEBUG', '').lower() == 'false' else True
+require_env, enforce_required_envs = get_enforcement_context()
 
 # Infer if this is running on Heroku based on this being set.
 HEROKUCONFIG_APP_NAME = os.getenv('HEROKUCONFIG_APP_NAME', '')
 ON_HEROKU = bool(HEROKUCONFIG_APP_NAME)
+
+# SECURITY WARNING: keep the secret key used in production secret!
+if ON_HEROKU:
+    SECRET_KEY = require_env('SECRET_KEY')
+else:
+    SECRET_KEY = os.getenv('SECRET_KEY', 'whopsthereshouldbeone')
+
+# Must come last to catch all missing environment variables
+enforce_required_envs()
+
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = env_to_bool('DEBUG') and not ON_HEROKU
 
 ALLOWED_HOSTS = ['*']
 
