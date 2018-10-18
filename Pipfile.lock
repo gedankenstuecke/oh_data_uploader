@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "44442a494b7910a6ff1aab8fee4fd9fa2c602e19a7d22e24748652b6c1eef0d9"
+            "sha256": "7b9fa40ed3e86788ad7a3cff997e42fbaa2471dc68f7f2c9e7409163e162de60"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -108,10 +108,10 @@
         },
         "open-humans-api": {
             "hashes": [
-                "sha256:1485f270c5147a973525f30b31cc3c02640bf148d84249cae5d39a6d1602d7bf"
+                "sha256:7a19d2cfbac504fdd156d5a84ad77a350a5c445dcfda6813aa6ac8d6f0522cf3"
             ],
             "index": "pypi",
-            "version": "==0.2.4"
+            "version": "==0.1.7"
         },
         "psycopg2": {
             "hashes": [
