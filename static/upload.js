@@ -41,6 +41,7 @@ function uploadFile(fle,metadata) {
     makeRequest({
       method: 'PUT',
       url: response.url,
+      response_type: 'text',
       params: fle,
       headers: {
         'Content-type': ''
@@ -57,7 +58,7 @@ function uploadFile(fle,metadata) {
         }
       });
       if(count == file_metadata.length) {
-        doneUpload();          
+        doneUpload();
       }
     })
     .catch(function (err) {
@@ -93,7 +94,11 @@ function makeRequest (opts) {
       Object.keys(opts.headers).forEach(function (key) {
         xhr.setRequestHeader(key, opts.headers[key]);
       });
+    };
+    if (opts.response_type) {
+      xhr.responseType = opts.response_type
     }
+
     var params = opts.params;
     xhr.send(params);
   });
